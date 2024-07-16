@@ -24,21 +24,22 @@ import com.mobiiot.androidqapi.api.Utils.PrinterServiceUtil
 import com.mobiiot.androidqapi.api.Utils.ServiceUtil
 import com.nbbse.mobiprint3.Printer
 import com.sagereal.printer.PrinterInterface
+import com.sunmi.printerx.enums.Align
+import com.sunmi.printerx.enums.ErrorLevel
+import com.sunmi.printerx.enums.ImageAlgorithm
 import com.sunmi.printerx.style.BaseStyle
+import com.sunmi.printerx.style.BitmapStyle
+import com.sunmi.printerx.style.QrStyle
 import com.sunmi.printerx.style.TextStyle
+import com.sunmi.printerx.utils.SystemPropertyUtil
+import com.sunmi.printerx.utils.SystemPropertyUtil.*
 import com.sunmi.samples.printerx.ui.vm.PrinterViewModel
 import com.sunmi.samples.printerx.ui.vm.selectPrinter
+import wangpos.sdk4.libbasebinder.c
 import java.io.*
 import java.net.URL
 import java.nio.channels.Channels
 import java.util.*
-import com.sunmi.printerx.enums.Align
-import com.sunmi.printerx.enums.DividingLine
-import com.sunmi.printerx.enums.ErrorLevel
-import com.sunmi.printerx.enums.ImageAlgorithm
-import com.sunmi.printerx.style.BitmapStyle
-import com.sunmi.printerx.style.QrStyle
-import kotlin.jvm.internal.Intrinsics.Kotlin
 
 
 class PrintingMethods {
@@ -243,7 +244,14 @@ class PrintingMethods {
                     Log.e("POS", pos);
                     return pos.replace(Regex("[^0-9]"), "")
                 }
-
+                "V3_MIX_EDLA_GL" -> {
+                    try {
+                        val pos = get("ro.sunmi.serial") as String
+                        return pos.replace(Regex("[^0-9]"), "")
+                    } catch (e: java.lang.Exception) {
+                        e.printStackTrace()
+                    }
+                }
                 "D4-505",
                 "D4",
                 "D1",
@@ -716,7 +724,11 @@ class PrintingMethods {
                 } catch (ex: java.lang.Exception) {
                     Log.e("Sunmi Exception Drawer", ex.toString() + "")
                 }
-
+                "V3_MIX_EDLA_GL" -> try {
+                    selectPrinter?.cashDrawerApi()?.open(null)
+                } catch (ex: java.lang.Exception) {
+                    Log.e("Sunmi Exception Drawer", ex.toString() + "")
+                }
                 "D4-505", "D4", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> {
                     IminSDKManager.opencashBox()
                 }
