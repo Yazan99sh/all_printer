@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:all_printer/all_printer.dart';
 import 'package:dio/dio.dart';
+import 'package:screenshot/screenshot.dart';
 
 void main() {
   runApp(const MyApp());
@@ -41,11 +42,11 @@ class _MyAppState extends State<MyApp> {
     //
     try {
       // var response = await Dio().get('http://213.159.5.155:410/invoice.json');
-var index =0 ;
-      setState((){
+      var index = 0;
+      setState(() {
         invoice = {
           "$index": "The Quick Brown fox jumped over The Lazy Dog",
-          "${++index}": "hello ",
+          "${++index}": "Name: Potato - ",
           "${++index}": "السلام عليكم ورحمة الله",
           "${++index}": "Date:2022-01-30 10:25:35",
           "${++index}": "Name: Altkamul Printer Test",
@@ -78,7 +79,7 @@ var index =0 ;
         };
       });
     } catch (e) {
-print("Error : ${e.toString()}");
+      print("Error : ${e.toString()}");
     }
     //
     //
@@ -96,7 +97,6 @@ print("Error : ${e.toString()}");
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-
     String platformVersion = 'starting ... ';
 
     String fullPath = await _allPrinterPlugin.getDownloadPath(merchantId);
@@ -115,10 +115,7 @@ print("Error : ${e.toString()}");
       //     await _allPrinterPlugin.printImage(imagePath: fullPath) ?? '';
     }
 
-
-
-      platformVersion = await _allPrinterPlugin.print(invoice: invoice) ?? '';
-
+    platformVersion = await _allPrinterPlugin.print(invoice: invoice) ?? '';
 
     platformVersion =
         await _allPrinterPlugin.printSingleLine(line: "this normal text !") ??
@@ -139,7 +136,6 @@ print("Error : ${e.toString()}");
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -202,6 +198,14 @@ print("Error : ${e.toString()}");
                   child: Text("Print Finish", textAlign: TextAlign.center),
                 ),
               ),
+              // ElevatedButton(
+              //   onPressed: () => getPlatformVersion(),
+              //   child: const SizedBox(
+              //     width: double.infinity,
+              //     child: Text("Print invoice as image testing",
+              //         textAlign: TextAlign.center),
+              //   ),
+              // ),
               ElevatedButton(
                 onPressed: () => getPlatformVersion(),
                 child: const SizedBox(
@@ -234,8 +238,8 @@ print("Error : ${e.toString()}");
     String platformVersion = 'starting ... ';
     await getInvoice();
     platformVersion = await _allPrinterPlugin.printSingleLine(
-        line:
-        """ هنالك العديد من الأنواع المتوفرة لنصوص لوريم إيبسوم، ولكن الغالبية تم تعديلها بشكل ما عبر إدخال بعض النوادر أو الكلمات العشوائية إلى النص. إن كنت تريد أن تستخدم نص لوريم إيبسوم ما، عليك أن تتحقق أولاً أن ليس هناك أي كلمات أو عبارات محرجة أو غير لائقة مخبأة في هذا النص. بينما تعمل جميع مولّدات نصوص لوريم إيبسوم على الإنترنت على إعادة تكرار مقاطع من نص لوريم إيبسوم نفسه عدة مرات بما تتطلبه الحاجة، يقوم مولّدنا هذا باستخدام كلمات من قاموس يحوي على أكثر من 200 كلمة لا تينية، مضاف إليها مجموعة من الجمل النموذجية، لتكوين نص لوريم إيبسوم ذو شكل منطقي قريب إلى النص الحقيقي. وبالتالي يكون النص الناتح خالي من التكرار، أو أي كلمات أو عبارات غير لائقة أو ما شابه. وهذا ما يجعله أول مولّد نص لوريم إيبسوم حقيقي على الإنترنت.  """) ??
+            line:
+                """ هنالك العديد من الأنواع المتوفرة لنصوص لوريم إيبسوم، ولكن الغالبية تم تعديلها بشكل ما عبر إدخال بعض النوادر أو الكلمات العشوائية إلى النص. إن كنت تريد أن تستخدم نص لوريم إيبسوم ما، عليك أن تتحقق أولاً أن ليس هناك أي كلمات أو عبارات محرجة أو غير لائقة مخبأة في هذا النص. بينما تعمل جميع مولّدات نصوص لوريم إيبسوم على الإنترنت على إعادة تكرار مقاطع من نص لوريم إيبسوم نفسه عدة مرات بما تتطلبه الحاجة، يقوم مولّدنا هذا باستخدام كلمات من قاموس يحوي على أكثر من 200 كلمة لا تينية، مضاف إليها مجموعة من الجمل النموذجية، لتكوين نص لوريم إيبسوم ذو شكل منطقي قريب إلى النص الحقيقي. وبالتالي يكون النص الناتح خالي من التكرار، أو أي كلمات أو عبارات غير لائقة أو ما شابه. وهذا ما يجعله أول مولّد نص لوريم إيبسوم حقيقي على الإنترنت.  """) ??
         '';
     _allPrinterPlugin.printReyFinish();
     setState(() {
@@ -244,7 +248,6 @@ print("Error : ${e.toString()}");
   }
 
   printImage() async {
-
     String platformVersion = 'starting ... ';
 
     String fullPath = await _allPrinterPlugin.getDownloadPath(merchantId);
@@ -254,9 +257,8 @@ print("Error : ${e.toString()}");
         "http://smartepaystaging.altkamul.ae/Content/Merchants/$merchantId/$merchantId/printing.bmp",
         fullPath);
 
-
     if (isDone) {
-    // fullPath="storage/emulated/0/download/printing.bmp";
+      // fullPath="storage/emulated/0/download/printing.bmp";
       platformVersion =
           await _allPrinterPlugin.printImage(imagePath: fullPath) ?? '';
       _allPrinterPlugin.printReyFinish();
@@ -269,14 +271,12 @@ print("Error : ${e.toString()}");
   printQrCode() async {
     String platformVersion = 'starting ... ';
     platformVersion =
-        await _allPrinterPlugin.printQrCode(qrData: "this is Data ") ?? '';
+        await _allPrinterPlugin.printQrCode(qrData: "https://stg.catalogak.info/index.html") ?? '';
     _allPrinterPlugin.printReyFinish();
     setState(() {
       _platformVersion = platformVersion;
     });
   }
-
-
 
   getPlatformVersion() async {
     String? platformVersion = 'starting ... ';
