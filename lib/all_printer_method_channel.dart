@@ -65,9 +65,16 @@ class MethodChannelAllPrinter extends AllPrinterPlatform {
   // get device information
   @override
   Future<String?> getDeviceSerial() async {
-    final result =
-        await methodChannel.invokeMethod<String>('serial');
+    final result = await methodChannel.invokeMethod<String>('serial');
     AppLogger.logDebug("getDeviceSerial() : ${result.toString()}");
+    return result;
+  }
+
+// open drawer
+  @override
+  Future<String?> openDrawer() async {
+    final result = await methodChannel.invokeMethod<String>('openDrawer');
+    AppLogger.logDebug("openDrawer() : ${result.toString()}");
     return result;
   }
 

@@ -203,18 +203,15 @@ public class AidlUtil {
     /**
      * 打印文字
      */
-    public void printText(String content, float size, boolean isBold, boolean isUnderLine, boolean align) {
+    public void printText(String content, float size, boolean isBold, boolean isUnderLine, int align) {
         if (woyouService == null) {
             Toast.makeText(context,"The service has been disconnected!",Toast.LENGTH_LONG).show();
             return;
         }
 
         try {
-            if(align)
-                woyouService.setAlignment(2, null);
-            else
-                woyouService.setAlignment(0, null);
-
+            /// align 0 left , 1 center , 2 right
+            woyouService.setAlignment(align, null);
             if (isBold) {
                 woyouService.sendRAWData(ESCUtil.boldOn(), null);
             } else {
@@ -228,7 +225,7 @@ public class AidlUtil {
             }
 
             woyouService.printTextWithFont(content, null, size, null);
-            woyouService.lineWrap(1, null);
+            // woyouService.lineWrap(1, null);
         } catch (RemoteException e) {
             e.printStackTrace();
         }

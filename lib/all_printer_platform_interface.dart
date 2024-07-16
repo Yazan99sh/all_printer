@@ -48,6 +48,9 @@ abstract class AllPrinterPlatform extends PlatformInterface {
   Future<String?> getDeviceSerial(){
     throw UnimplementedError('getDeviceSerial() has not been implemented.');
   }
+  Future<void> openDrawer(){
+    throw UnimplementedError('openDrawer() has not been implemented.');
+  }
   Future download(Dio dio, String url, String savePath) async {
     throw UnimplementedError('download() has not been implemented.');
   }

@@ -14,6 +14,10 @@ class AllPrinter {
     return AllPrinterPlatform.instance.getDeviceSerial();
   }
 
+  Future<void> openDrawer() {
+    return AllPrinterPlatform.instance.openDrawer();
+  }
+
   Future<String?> printImage({required String imagePath}) {
     return AllPrinterPlatform.instance.printImage(imagePath);
   }
