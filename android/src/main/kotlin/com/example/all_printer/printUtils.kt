@@ -44,8 +44,15 @@ import java.util.*
 
 class PrintingMethods {
 
-    private val printerX: PrinterViewModel = PrinterViewModel()
-
+    //private val printerX: PrinterViewModel = PrinterViewModel()
+    private var _printerX: PrinterViewModel? = null
+    private val printerX: PrinterViewModel
+        get() {
+            if (_printerX == null) {
+                _printerX = PrinterViewModel()
+            }
+            return _printerX!!
+        }
     companion object {
         @SuppressLint("StaticFieldLeak")
         var LoginActivity: Context? = null
@@ -523,14 +530,14 @@ class PrintingMethods {
                             TextStyle.getStyle()
                                 .setAlign(alignment).enableBold(false)
                         )
-                        addText("\n", TextStyle.getStyle())
+                        //addText("\n", TextStyle.getStyle())
                         autoOut()
                     } else {
                         selectPrinter?.lineApi()?.run {
                             initLine(BaseStyle.getStyle())
                             printText(
                                 string,
-                                TextStyle.getStyle().setTextSize(34).enableBold(true)
+                                TextStyle.getStyle().setTextSize(30).enableBold(true)
                                     .setAlign(alignment)
                             )
                             //addText("\n", TextStyle.getStyle())
