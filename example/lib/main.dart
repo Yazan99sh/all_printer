@@ -60,6 +60,7 @@ class _MyAppState extends State<MyApp> {
           "${++index}": "size:2",
           "${++index}": "Tax Invoice",
           "${++index}": "size:1",
+          "${++index}": "",
           "${++index}": "******************************",
           "${++index}": "Title: Exterir Wash Small Car",
           "${++index}": "service: Wash",

@@ -44,8 +44,6 @@ import java.util.*
 
 class PrintingMethods {
 
-    private val printerX: PrinterViewModel = PrinterViewModel()
-
     companion object {
         @SuppressLint("StaticFieldLeak")
         var LoginActivity: Context? = null
@@ -55,7 +53,13 @@ class PrintingMethods {
         var alignmentValue: kotlin.Int = 0
 
         var mIminPrintUtils: IminPrintUtils? = null
-
+        private val printerX: PrinterViewModel? by lazy {
+            if (Build.MODEL == "V3_MIX_EDLA_GL") {
+                PrinterViewModel()
+            } else {
+                null
+            }
+        }
 
         var print: Printer? = null
 
@@ -64,7 +68,6 @@ class PrintingMethods {
         private val bloop = false
         private var bthreadrunning = false
         private val printInterfaceService: PrinterInterface? = null
-
 
     }
 
@@ -142,7 +145,10 @@ class PrintingMethods {
 
             "V3_MIX_EDLA_GL" -> {
                 try {
-                    LoginActivity?.let { printerX.initPrinter(it) }
+                    LoginActivity?.let {
+                       printerX?.initPrinter(it)
+                    }
+
                 } catch (ex: java.lang.Exception) {
                     Log.e("  Exception  ", ex.toString() + "")
                 }
@@ -244,6 +250,7 @@ class PrintingMethods {
                     Log.e("POS", pos);
                     return pos.replace(Regex("[^0-9]"), "")
                 }
+
                 "V3_MIX_EDLA_GL" -> {
                     try {
                         val pos = get("ro.sunmi.serial") as String
@@ -252,6 +259,7 @@ class PrintingMethods {
                         e.printStackTrace()
                     }
                 }
+
                 "D4-505",
                 "D4",
                 "D1",
@@ -523,8 +531,8 @@ class PrintingMethods {
                             TextStyle.getStyle()
                                 .setAlign(alignment).enableBold(false)
                         )
-                        addText("\n", TextStyle.getStyle())
-                        autoOut()
+                        //addText("\n", TextStyle.getStyle())
+                        //autoOut()
                     } else {
                         selectPrinter?.lineApi()?.run {
                             initLine(BaseStyle.getStyle())
@@ -534,7 +542,7 @@ class PrintingMethods {
                                     .setAlign(alignment)
                             )
                             //addText("\n", TextStyle.getStyle())
-                            autoOut()
+                            //autoOut()
                         }
                     }
                 } catch (ex: java.lang.Exception) {
@@ -632,7 +640,7 @@ class PrintingMethods {
                         )
                         initLine(BaseStyle.getStyle().setAlign(Align.CENTER))
                         //printText(string, TextStyle.getStyle().enableBold(true))
-                        autoOut()
+                        //autoOut()
                     }
                 } catch (ex: java.lang.Exception) {
                     Log.e("Rey Exception Sunmi", ex.toString() + "")
@@ -724,11 +732,13 @@ class PrintingMethods {
                 } catch (ex: java.lang.Exception) {
                     Log.e("Sunmi Exception Drawer", ex.toString() + "")
                 }
+
                 "V3_MIX_EDLA_GL" -> try {
                     selectPrinter?.cashDrawerApi()?.open(null)
                 } catch (ex: java.lang.Exception) {
                     Log.e("Sunmi Exception Drawer", ex.toString() + "")
                 }
+
                 "D4-505", "D4", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> {
                     IminSDKManager.opencashBox()
                 }
@@ -891,7 +901,7 @@ class PrintingMethods {
                                 ImageAlgorithm.BINARIZATION
                             ).setValue(120).setWidth(384).setHeight(225)
                         )
-                        autoOut()
+                        //autoOut()
                     }
                 }
 
