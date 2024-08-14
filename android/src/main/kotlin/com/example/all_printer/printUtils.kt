@@ -31,11 +31,9 @@ import com.sunmi.printerx.style.BaseStyle
 import com.sunmi.printerx.style.BitmapStyle
 import com.sunmi.printerx.style.QrStyle
 import com.sunmi.printerx.style.TextStyle
-import com.sunmi.printerx.utils.SystemPropertyUtil
 import com.sunmi.printerx.utils.SystemPropertyUtil.*
 import com.sunmi.samples.printerx.ui.vm.PrinterViewModel
 import com.sunmi.samples.printerx.ui.vm.selectPrinter
-import wangpos.sdk4.libbasebinder.c
 import java.io.*
 import java.net.URL
 import java.nio.channels.Channels
@@ -47,10 +45,6 @@ class PrintingMethods {
     companion object {
         @SuppressLint("StaticFieldLeak")
         var LoginActivity: Context? = null
-        var sizeValue = 0
-        var fontValue: kotlin.Int = 0
-        var directionValue: kotlin.Int = 0
-        var alignmentValue: kotlin.Int = 0
 
         var mIminPrintUtils: IminPrintUtils? = null
         private val printerX: PrinterViewModel? by lazy {
@@ -146,7 +140,7 @@ class PrintingMethods {
             "V3_MIX_EDLA_GL" -> {
                 try {
                     LoginActivity?.let {
-                       printerX?.initPrinter(it)
+                        printerX?.initPrinter(it)
                     }
 
                 } catch (ex: java.lang.Exception) {
@@ -432,36 +426,26 @@ class PrintingMethods {
                 }
             }.start()
         }
-//        if (mIminPrintUtils!!.getPrinterStatus(IminPrintUtils.PrintConnectType.USB) === -1) {
-//            Thread {
-//                try {
-//                    mIminPrintUtils!!.resetDevice()
-//                    mIminPrintUtils!!.initPrinter(IminPrintUtils.PrintConnectType.USB)
-//                    Log.e("IMINY", mIminPrintUtils!!.getPrinterStatus(IminPrintUtils.PrintConnectType.USB).toString())
-//                } catch (e: java.lang.Exception) {
-//                }
-//            }.start()
-//        }
     }
 
-    fun printRey(string: String, size: Int, textAlign: Int, textDirection: Int) {
+    fun printRey(string: String, size: Float, textAlign: Int, textDirection: Int) {
         try {
             checkIminPrinter()
             Log.e("printReyprintRey", "$string size:$size")
             Log.e("Constant.posType", Constant.posType.toString() + " ")
             when (Constant.posType) {
-                "MobiPrint" -> print!!.printText(string, size, Constant.isArabicPrintAllowed)
+                "MobiPrint" -> print!!.printText(string, if (size > 24) 3 else if (size > 18) 2 else 1, Constant.isArabicPrintAllowed)
                 "WISENET5" -> try {
-                    if (size == 2) {
+                    if (size > 24) {
                         if (Constant.isArabicPrintAllowed) mPrinter!!.printString(
                             string,
-                            35,
+                            3,
                             wangpos.sdk4.libbasebinder.Printer.Align.RIGHT,
                             true,
                             false
                         ) else mPrinter!!.printString(
                             string,
-                            35,
+                            3,
                             wangpos.sdk4.libbasebinder.Printer.Align.LEFT,
                             true,
                             false
@@ -472,10 +456,11 @@ class PrintingMethods {
                 }
 
                 "MP3_Plus", "MobiPrint 4+", "MobiPrint4_Plus", "MP4", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> try {
+                    var mpTextSize = if (size > 24) 3 else if (size > 18) 2 else 1
                     if (Constant.isArabicPrintAllowed || isProbablyArabic(string))
                         CsPrinter.printText_FullParm(
                             string,
-                            size - 1,
+                            mpTextSize - 1,
                             1,
                             1,
                             textAlign,
@@ -483,7 +468,7 @@ class PrintingMethods {
                             false
                         ) else CsPrinter.printText_FullParm(
                         string,
-                        size - 1,
+                        mpTextSize - 1,
                         0,
                         2,
                         textAlign,
@@ -506,11 +491,8 @@ class PrintingMethods {
                     val alignment = if (textAlign == 0) {
                         (if (Constant.isArabicPrintAllowed) 2 else 0)
                     } else textAlign
-                    if (size == 1) AidlUtil.getInstance()
-                        .printText(string, 24F, false, false, alignment) else {
-                        AidlUtil.getInstance()
-                            .printText(string, 36F, true, false, alignment)
-                    }
+                    AidlUtil.getInstance()
+                        .printText(string, size, false, false, alignment)
                 } catch (ex: java.lang.Exception) {
                     Log.e("Rey Exception Mobiwire", ex.toString() + "")
                 }
@@ -524,54 +506,35 @@ class PrintingMethods {
                         Align.RIGHT
                     }
                     Log.e("V3_MIX_EDLA_GL Printing", "size $size")
-                    if (size == 1) selectPrinter?.lineApi()?.run {
+                    selectPrinter?.lineApi()?.run {
                         initLine(BaseStyle.getStyle())
+                        val isBold = if (size > 24) true else false
                         printText(
                             string,
-                            TextStyle.getStyle()
-                                .setAlign(alignment).enableBold(false)
+                            TextStyle.getStyle().setTextSize(size.toInt()).enableBold(isBold).setAlign(alignment)
                         )
                         //addText("\n", TextStyle.getStyle())
                         //autoOut()
-                    } else {
-                        selectPrinter?.lineApi()?.run {
-                            initLine(BaseStyle.getStyle())
-                            printText(
-                                string,
-                                TextStyle.getStyle().setTextSize(34).enableBold(true)
-                                    .setAlign(alignment)
-                            )
-                            //addText("\n", TextStyle.getStyle())
-                            //autoOut()
-                        }
                     }
                 } catch (ex: java.lang.Exception) {
                     Log.e("Rey ExceptionNewSunmiGe", ex.toString() + "")
                 }
 
-                "D4-505", "D4", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> if (size == 2) {
+                "D4-505", "D4", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> {
                     Log.e("Printtt", "$size string:$string")
+                    mIminPrintUtils!!.setTextSize(size.toInt())
                     mIminPrintUtils!!.setAlignment(textAlign)
-                    mIminPrintUtils?.setTextSize(26)
-                    mIminPrintUtils?.setTextStyle(Typeface.BOLD)
-                    mIminPrintUtils?.printText(
+                    if (size.toInt() > 24) {
+                        mIminPrintUtils!!.sethaveBold(true)
+                    } else {
+                        mIminPrintUtils!!.sethaveBold(false)
+                    }
+                    mIminPrintUtils!!.printText(
                         """
                         $string
                         
                         """.trimIndent()
                     )
-                } else {
-                    Log.e("Printtt", size.toString() + "")
-                    mIminPrintUtils!!.setAlignment(textAlign)
-                    mIminPrintUtils?.setTextSize(22)
-                    mIminPrintUtils?.setTextStyle(Typeface.NORMAL)
-                    mIminPrintUtils?.printText(
-                        """
-                        $string
-                        
-                        """.trimIndent()
-                    )
-
                 }
             }
         } catch (ex: java.lang.Exception) {
@@ -821,7 +784,7 @@ class PrintingMethods {
                                 ?.getPath()
                                 .toString() + "/unzipFolder/files/10001002/logo.bmp"
                         )
-                        printRey("\n", 1, 0, 1)
+                        printRey("\n", 24F, 0, 1)
 
 //                    if(true)
 //                        return;
@@ -881,7 +844,7 @@ class PrintingMethods {
                     } catch (ex: java.lang.Exception) {
                         Log.e("printReyprintRey", ex.message!!)
                     }
-                    printRey("\n", 1, 0, 1)
+                    printRey("\n", 24F, 0, 1)
                 }
 
                 "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI" -> {
@@ -919,7 +882,7 @@ class PrintingMethods {
                         BitmapFactory.decodeStream(FileInputStream(string), null, options)
                     bitmap_black = getBlackWhiteBitmap(bitmap_black)
                     mIminPrintUtils!!.printSingleBitmap(bitmap_black, 1)
-                    mIminPrintUtils!!.printAndLineFeed()
+                    mIminPrintUtils!!.printAndFeedPaper(1)
                 }
             }
         } catch (ex: java.lang.Exception) {

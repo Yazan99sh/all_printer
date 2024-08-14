@@ -57,15 +57,24 @@ class _MyAppState extends State<MyApp> {
           "${++index}": "Car No: 1001k",
           "${++index}": "Customer No: 971512345678",
           "${++index}": "******************************",
-          "${++index}": "size:2",
+          "${++index}": "size:34",
           "${++index}": "Tax Invoice",
-          "${++index}": "size:1",
-          "${++index}": "",
+          "${++index}": "size:24",
           "${++index}": "******************************",
           "${++index}": "Title: Exterir Wash Small Car",
           "${++index}": "service: Wash",
           "${++index}": "price: 35.00",
           "${++index}": "qty: 2",
+          "${++index}": "size:17",
+          "${++index}": "------ add ones ------",
+          "${++index}": "-> Kutchab + (4.0 AED X 5.0) = 20.00 AED",
+          "${++index}": "----------------------",
+          "${++index}": "size:24",
+          "${++index}": "Title: Exterir Wash Small Car",
+          "${++index}": "service: Wash",
+          "${++index}": "price: 35.00",
+          "${++index}": "qty: 2",
+          "${++index}": "",
           "${++index}": "Total Qty: 2",
           "${++index}": "Total Befor Vat: 70.00 AED",
           "${++index}": "Vat: @5%: 11.00 AED",
@@ -118,9 +127,9 @@ class _MyAppState extends State<MyApp> {
 
     platformVersion = await _allPrinterPlugin.print(invoice: invoice) ?? '';
 
-    platformVersion =
-        await _allPrinterPlugin.printSingleLine(line: "this normal text !") ??
-            '';
+    // platformVersion =
+    //     await _allPrinterPlugin.printSingleLine(line: "this normal text !") ??
+    //         '';
     _allPrinterPlugin.printQrCode(qrData: "data");
 
     _allPrinterPlugin.printReyFinish();

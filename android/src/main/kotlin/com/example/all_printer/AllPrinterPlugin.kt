@@ -80,7 +80,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                 if (call.arguments != null) {
                     try {
-                        printerObject?.printRey("${call.arguments}", 1,0,0)
+                        printerObject?.printRey("${call.arguments}", 24F,0,0)
                         result.success("success !")
                     } catch (e: Exception) {
                         result.success("${e.message}");
@@ -115,7 +115,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     val logoPath = call.argument<String>("logoPath")
 
                     var loremX500 = ""
-                    var textSize = 1
+                    var textSize:Float = 24F
                     var textAlign = 0
                     var textDirection = 1
                     var index = 0
@@ -135,7 +135,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                                 loremX500 = ""
                             } else if ("${hashMap["$index"]}".startsWith(prefix = "size")) {
                                 printRey(loremX500, null, textSize,textAlign,textDirection)
-                                textSize = "${hashMap["$index"]}".split(":").last().toInt()
+                                textSize = "${hashMap["$index"]}".split(":").last().toFloat()
                                 loremX500 = ""
                             } else if (printerObject?.isProbablyArabic("${hashMap["$index"]}") == true) {
                                 printRey(loremX500, null, textSize,textAlign,textDirection)
@@ -187,7 +187,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         channel.setMethodCallHandler(null)
     }
 
-    private fun printRey(loremX500: String, logoPath: String?, textSize: Int, textAlign: Int,textDirection: Int=1): String {
+    private fun printRey(loremX500: String, logoPath: String?, textSize: Float, textAlign: Int,textDirection: Int=1): String {
         Log.d("PosType", Constant.posType)
 
         return try {
