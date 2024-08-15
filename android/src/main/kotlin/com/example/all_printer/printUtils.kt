@@ -456,11 +456,11 @@ class PrintingMethods {
                 }
 
                 "MP3_Plus", "MobiPrint 4+", "MobiPrint4_Plus", "MP4", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> try {
-                    var mpTextSize = if (size > 24) 3 else if (size > 18) 2 else 1
+                    var mpTextSize = if (size > 24) 1 else if (size > 18) 0 else -1
                     if (Constant.isArabicPrintAllowed || isProbablyArabic(string))
                         CsPrinter.printText_FullParm(
                             string,
-                            mpTextSize - 1,
+                            mpTextSize,
                             1,
                             1,
                             textAlign,
@@ -468,7 +468,7 @@ class PrintingMethods {
                             false
                         ) else CsPrinter.printText_FullParm(
                         string,
-                        mpTextSize - 1,
+                        mpTextSize,
                         0,
                         2,
                         textAlign,
