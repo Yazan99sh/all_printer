@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:all_printer/all_printer.dart';
 import 'package:dio/dio.dart';
-import 'package:screenshot/screenshot.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(const MyApp());
@@ -102,9 +102,29 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // _allPrinterPlugin.getPermission();
     _allPrinterPlugin.getDeviceSerial();
+    checkPermission();
     super.initState();
   }
+  Future<void> checkPermission() async {
+    var status = await Permission.manageExternalStorage.status;
+    if (status != PermissionStatus.granted) {
+      await Permission.manageExternalStorage.request();
+    }
+    var status2 = await Permission.storage.status;
 
+    if (status2 != PermissionStatus.granted) {
+      await Permission.storage.request();
+    }
+    var installPackage = await Permission.requestInstallPackages.status;
+    if (installPackage != PermissionStatus.granted) {
+      await Permission.requestInstallPackages.request();
+    }
+    var phone = await Permission.phone.status;
+    if (phone != PermissionStatus.granted) {
+      await Permission.phone.request();
+    }
+    return;
+  }
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     String platformVersion = 'starting ... ';
@@ -117,10 +137,10 @@ class _MyAppState extends State<MyApp> {
         fullPath);
 
     await getInvoice();
-    invoice['logoPath'] = "storage/emulated/0/download/printing.bmp";
+    //invoice['logoPath'] = "storage/emulated/0/download/printing.bmp";
 
     if (isDone) {
-      invoice['logoPath'] = fullPath;
+      // invoice['logoPath'] = fullPath;
       // platformVersion =
       //     await _allPrinterPlugin.printImage(imagePath: fullPath) ?? '';
     }
@@ -260,19 +280,16 @@ class _MyAppState extends State<MyApp> {
   printImage() async {
     String platformVersion = 'starting ... ';
 
-    String fullPath = await _allPrinterPlugin.getDownloadPath(merchantId);
+    String fullPath = '/storage/emulated/0/download/rendered_image.jpg';
 
-    bool isDone = await _allPrinterPlugin.download(
-        dio,
-        "http://smartepaystaging.altkamul.ae/Content/Merchants/$merchantId/$merchantId/printing.bmp",
-        fullPath);
+    // bool isDone = await _allPrinterPlugin.download(
+    //     dio,
+    //     "http://smartepaystaging.altkamul.ae/Content/Merchants/$merchantId/$merchantId/printing.bmp",
+    //     fullPath);
 
-    if (isDone) {
-      // fullPath="storage/emulated/0/download/printing.bmp";
-      platformVersion =
-          await _allPrinterPlugin.printImage(imagePath: fullPath) ?? '';
-      _allPrinterPlugin.printReyFinish();
-    }
+    platformVersion =
+        await _allPrinterPlugin.printImage(imagePath: fullPath) ?? '';
+    _allPrinterPlugin.printReyFinish();
     setState(() {
       _platformVersion = platformVersion;
     });
@@ -280,8 +297,9 @@ class _MyAppState extends State<MyApp> {
 
   printQrCode() async {
     String platformVersion = 'starting ... ';
-    platformVersion =
-        await _allPrinterPlugin.printQrCode(qrData: "https://stg.catalogak.info/index.html") ?? '';
+    platformVersion = await _allPrinterPlugin.printQrCode(
+            qrData: "https://stg.catalogak.info/index.html") ??
+        '';
     _allPrinterPlugin.printReyFinish();
     setState(() {
       _platformVersion = platformVersion;

@@ -859,11 +859,15 @@ class PrintingMethods {
                     options.inPreferredConfig = Bitmap.Config.ARGB_8888
                     val bitmap = BitmapFactory.decodeStream(FileInputStream(string), null, options)
                     selectPrinter?.lineApi()?.run {
-                        printBitmap(
-                            bitmap, BitmapStyle.getStyle().setAlign(Align.CENTER).setAlgorithm(
-                                ImageAlgorithm.BINARIZATION
-                            ).setValue(120).setWidth(384).setHeight(225)
-                        )
+                        bitmap?.let {
+                            val bitmapWidth = it.width
+                            val bitmapHeight = it.height
+                            printBitmap(
+                                it, BitmapStyle.getStyle().setAlign(Align.CENTER).setAlgorithm(
+                                    ImageAlgorithm.BINARIZATION
+                                ).setValue(180).setWidth(bitmapWidth).setHeight(bitmapHeight)
+                            )
+                        }
                         //autoOut()
                     }
                 }
