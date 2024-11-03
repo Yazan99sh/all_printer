@@ -276,7 +276,7 @@ class PrintingMethods {
     }
 
     @Throws(RemoteException::class)
-    fun printSingleLine(line: String) {
+    fun printSingleLine(line: String, textAlign: Int, textDirection: Int) {
         if (line.length > 31 && !line.startsWith("--------------------------------")) {
             var i = 0
             while (i <= line.length) {
@@ -288,28 +288,20 @@ class PrintingMethods {
                         "Mobiwire MP4"
                     ) || Constant.posType.equals("MobiPrint4_Plus") || Constant.posType.equals("k80hd_bsp_fwv_512m")
                 ) {
-//                    if(isProbablyArabic(temp_line))
-                    if (Constant.isArabicPrintAllowed) CsPrinter.printText_FullParm(
+                    CsPrinter.printText_FullParm(
                         temp_line,
                         0,
-                        1,
+                        textDirection,
                         2,
-                        0,
+                        textAlign,
                         false,
                         false
-                    ) else CsPrinter.printText_FullParm(temp_line, 0, 0, 2, 0, false, false)
-                    //                    CsPrinter.printText(temp_line);
+                    )
                 } else {
-                    if (Constant.isArabicPrintAllowed) mPrinter!!.printString(
+                    mPrinter!!.printString(
                         temp_line,
                         25,
-                        wangpos.sdk4.libbasebinder.Printer.Align.RIGHT,
-                        false,
-                        false
-                    ) else mPrinter!!.printString(
-                        temp_line,
-                        25,
-                        wangpos.sdk4.libbasebinder.Printer.Align.LEFT,
+                        if (textDirection == 1) wangpos.sdk4.libbasebinder.Printer.Align.RIGHT else wangpos.sdk4.libbasebinder.Printer.Align.LEFT,
                         false,
                         false
                     )
@@ -321,28 +313,13 @@ class PrintingMethods {
                     "Mobiwire MP4"
                 ) || Constant.posType.equals("MobiPrint4_Plus") || Constant.posType.equals("k80hd_bsp_fwv_512m")
             ) {
-//                if(isProbablyArabic(line))
-                if (Constant.isArabicPrintAllowed) CsPrinter.printText_FullParm(
-                    line,
-                    0,
-                    1,
-                    2,
-                    0,
-                    false,
-                    false
-                ) else CsPrinter.printText_FullParm(line, 0, 0, 2, 0, false, false)
-                //                CsPrinter.printText(line);
+                CsPrinter.printText_FullParm(line, 0, textDirection, 2, textAlign, false, false)
+
             } else {
-                if (Constant.isArabicPrintAllowed) mPrinter!!.printString(
+                mPrinter!!.printString(
                     line,
                     25,
-                    wangpos.sdk4.libbasebinder.Printer.Align.RIGHT,
-                    false,
-                    false
-                ) else mPrinter!!.printString(
-                    line,
-                    25,
-                    wangpos.sdk4.libbasebinder.Printer.Align.LEFT,
+                    if (textDirection == 1) wangpos.sdk4.libbasebinder.Printer.Align.RIGHT else wangpos.sdk4.libbasebinder.Printer.Align.LEFT,
                     false,
                     false
                 )
@@ -361,6 +338,13 @@ class PrintingMethods {
         return false
     }
 
+    fun isAllArabic(s: String): Boolean {
+        var ss = s.replace(" ", "")
+        ss = s.replace(":", "")
+        val arabicRegex = Regex("^[\\u0600-\\u06FF\\u0750-\\u077F\\u08A0-\\u08FF]+$")
+        return arabicRegex.matches(ss)
+    }
+
     fun preprocessLines(line: String): ArrayList<String> {
         val lines = ArrayList<String>()
         var start = 0
@@ -375,10 +359,10 @@ class PrintingMethods {
     }
 
     @Throws(RemoteException::class)
-    fun printLine(line: String?) {
+    fun printLine(line: String?, textAlign: Int, textDirection: Int) {
         if (Constant.posType.equals("WISENET5")) for (subline in preprocessLines(
             line!!
-        )) printSingleLine(subline)
+        )) printSingleLine(subline, textAlign, textDirection)
     }
 
     private fun checkSize(
@@ -434,76 +418,61 @@ class PrintingMethods {
             Log.e("printReyprintRey", "$string size:$size")
             Log.e("Constant.posType", Constant.posType.toString() + " ")
             when (Constant.posType) {
-                "MobiPrint" -> print!!.printText(string, if (size > 24) 3 else if (size > 18) 2 else 1, Constant.isArabicPrintAllowed)
+                "MobiPrint" -> print!!.printText(
+                    string,
+                    if (size > 24) 3 else if (size > 18) 2 else 1,
+                    textDirection == 1
+                )
+
                 "WISENET5" -> try {
                     if (size > 24) {
-                        if (Constant.isArabicPrintAllowed) mPrinter!!.printString(
+                        mPrinter!!.printString(
                             string,
                             3,
-                            wangpos.sdk4.libbasebinder.Printer.Align.RIGHT,
-                            true,
-                            false
-                        ) else mPrinter!!.printString(
-                            string,
-                            3,
-                            wangpos.sdk4.libbasebinder.Printer.Align.LEFT,
+                            if (textDirection == 1) wangpos.sdk4.libbasebinder.Printer.Align.RIGHT else wangpos.sdk4.libbasebinder.Printer.Align.LEFT,
                             true,
                             false
                         )
-                    } else printLine(string)
+                    } else printLine(string, textAlign, textDirection)
                 } catch (ex: java.lang.Exception) {
                     Log.e("1 Exception WiseNet", ex.toString() + "")
                 }
 
                 "MP3_Plus", "MobiPrint 4+", "MobiPrint4_Plus", "MP4", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> try {
                     var mpTextSize = if (size > 24) 1 else if (size > 18) 0 else -1
-                    if (Constant.isArabicPrintAllowed || isProbablyArabic(string))
-                        CsPrinter.printText_FullParm(
-                            string,
-                            mpTextSize,
-                            1,
-                            1,
-                            textAlign,
-                            false,
-                            false
-                        ) else CsPrinter.printText_FullParm(
+                    CsPrinter.printText_FullParm(
                         string,
                         mpTextSize,
-                        0,
+                        textDirection,
                         2,
                         textAlign,
                         false,
                         false
                     )
-
-//                        Log.e("printReyprintRey 1", CsPrinter.getLastError() + " ");
-//                        Log.e("printReyprintRey 2", CsPrinter.getPrinterStatus() + " ");
-//                        Log.e("printReyprintRey 3", CsPrinter.getCurrentVoltageStatus() + " ");
-//                        Log.e("printReyprintRey 4", CsPrinter.getPaperStatus() + " ");
-//                        Log.e("printReyprintRey 5", CsPrinter.getPowerState() + " ");
-//                        Log.e("printReyprintRey 6", CsPrinter.getTempStatus() + " ");
-//                        Log.e("printReyprintRey 7", CsPrinter.printGetPrintedLength() + " ");
                 } catch (ex: java.lang.Exception) {
                     Log.e("Rey Exception MP3_Plus", ex.toString() + "")
                 }
 
                 "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI" -> try {
-                    val alignment = if (textAlign == 0) {
-                        (if (Constant.isArabicPrintAllowed) 2 else 0)
-                    } else textAlign
                     AidlUtil.getInstance()
-                        .printText(string, size, false, false, alignment)
+                        .printText(string, size, false, false, textAlign)
                 } catch (ex: java.lang.Exception) {
                     Log.e("Rey Exception Mobiwire", ex.toString() + "")
                 }
 
                 "V3_MIX_EDLA_GL" -> try {
-                    val alignment = if (textAlign == 0) {
-                        (if (Constant.isArabicPrintAllowed) Align.RIGHT else Align.LEFT)
-                    } else if (textAlign == 1) {
-                        Align.CENTER
-                    } else {
-                        Align.RIGHT
+                    val alignment = when (textAlign) {
+                        0 -> {
+                            Align.LEFT
+                        }
+
+                        1 -> {
+                            Align.CENTER
+                        }
+
+                        else -> {
+                            Align.RIGHT
+                        }
                     }
                     Log.e("V3_MIX_EDLA_GL Printing", "size $size")
                     selectPrinter?.lineApi()?.run {
@@ -511,7 +480,8 @@ class PrintingMethods {
                         val isBold = if (size > 24) true else false
                         printText(
                             string,
-                            TextStyle.getStyle().setTextSize(size.toInt()).enableBold(isBold).setAlign(alignment)
+                            TextStyle.getStyle().setTextSize(size.toInt()).enableBold(isBold)
+                                .setAlign(alignment)
                         )
                         //addText("\n", TextStyle.getStyle())
                         //autoOut()

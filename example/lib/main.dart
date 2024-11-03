@@ -45,9 +45,9 @@ class _MyAppState extends State<MyApp> {
       var index = 0;
       setState(() {
         invoice = {
-          "$index": "The Quick Brown fox jumped over The Lazy Dog",
-          "${++index}": "Name: Potato - ",
-          "${++index}": "السلام عليكم ورحمة الله",
+          "$index": "align:1",
+          "${++index}": "The Best Company In The World",
+          "${++index}": "align:0",
           "${++index}": "Date:2022-01-30 10:25:35",
           "${++index}": "Name: Altkamul Printer Test",
           "${++index}": "Merchent ID: $merchantId",
@@ -55,6 +55,8 @@ class _MyAppState extends State<MyApp> {
           "${++index}": "Transaction ID: 10000001",
           "${++index}": "Voucher No: 22-003111",
           "${++index}": "Car No: 1001k",
+          "${++index}": "اسم الزبون: يزن شيخ محمد",
+          "${++index}": "Customer Name: يزن شيخ محمد",
           "${++index}": "Customer No: 971512345678",
           "${++index}": "******************************",
           "${++index}": "size:34",
@@ -70,8 +72,8 @@ class _MyAppState extends State<MyApp> {
           "${++index}": "-> Kutchab + (4.0 AED X 5.0) = 20.00 AED",
           "${++index}": "----------------------",
           "${++index}": "size:24",
-          "${++index}": "Title: Exterir Wash Small Car",
-          "${++index}": "service: Wash",
+          "${++index}": "Title: Exterir Wash - غسلة كاملة",
+          "${++index}": "service: Wash غسيل",
           "${++index}": "price: 35.00",
           "${++index}": "qty: 2",
           "${++index}": "",
@@ -81,7 +83,7 @@ class _MyAppState extends State<MyApp> {
           "${++index}": "-------------------------------",
           "${++index}": "Total: 71.00 AED",
           "${++index}": "******************************",
-          "${++index}": "نص تاني بالعربي",
+          "${++index}": "Hi There",
           "${++index}": "******************************",
           "${++index}": "City: Dubai UAE Call Us : 05123456789",
           "${++index}": "-------------------------------",
@@ -105,6 +107,7 @@ class _MyAppState extends State<MyApp> {
     checkPermission();
     super.initState();
   }
+
   Future<void> checkPermission() async {
     var status = await Permission.manageExternalStorage.status;
     if (status != PermissionStatus.granted) {
@@ -125,6 +128,7 @@ class _MyAppState extends State<MyApp> {
     }
     return;
   }
+
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     String platformVersion = 'starting ... ';
@@ -144,7 +148,7 @@ class _MyAppState extends State<MyApp> {
       // platformVersion =
       //     await _allPrinterPlugin.printImage(imagePath: fullPath) ?? '';
     }
-
+    var ii = convertToFastPrint(invoice);
     platformVersion = await _allPrinterPlugin.print(invoice: invoice) ?? '';
 
     // platformVersion =
@@ -312,5 +316,57 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _platformVersion = platformVersion!;
     });
+  }
+
+  Map convertToFastPrint(Map inv) {
+    Map shortCutMap = {};
+    int index = 0;
+    String line = '';
+    for (var e in inv.entries) {
+      if (e.key.toString().contains('logoPath')) {
+        shortCutMap['${e.key}'] = e.value;
+        continue;
+      } else if (e.value.toString().contains('align') ||
+          e.value.toString().contains('size')) {
+        /// assign line to index and clear it .
+        if (line.isNotEmpty) {
+          shortCutMap['$index'] = line;
+          line = '';
+          index++;
+        }
+
+        /// new index .
+        shortCutMap['$index'] = e.value;
+        index++;
+      } else if (line.length >= 700) {
+        shortCutMap['$index'] = line + e.value;
+        line = '';
+        index++;
+      } else {
+        if (e.value.toString() != '' || e.value != null) {
+          line = '${line + e.value} \n';
+          if (e.value.toString().isContainArabicLatter &&
+              e.value.toString().isContainEnglishLatter) {
+            line += '';
+          }
+        }
+      }
+    }
+    if (line.isNotEmpty) {
+      shortCutMap['$index'] = line;
+    }
+    return shortCutMap;
+  }
+}
+
+extension StringExtensions on String {
+  bool get isContainArabicLatter {
+    final arabicRegex = RegExp(r'[\u0600-\u06FF]');
+    return arabicRegex.hasMatch(this);
+  }
+
+  bool get isContainEnglishLatter {
+    final englishRegex = RegExp(r'[a-zA-Z]');
+    return englishRegex.hasMatch(this);
   }
 }
