@@ -442,40 +442,12 @@ class PrintingMethods {
 
                 "MP3_Plus", "MobiPrint 4+", "MobiPrint4_Plus", "MP4", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> try {
                     var mpTextSize = if (size > 24) 1 else if (size > 18) 0 else 0
-                    Log.e("PRINTREY1", ex.toString() + "")
-                    CsPrinter.printText_FullParm(
-                        "أنا يزن .",
-                        mpTextSize,
-                        2,
-                        2,
-                        0,
-                        false,
-                        false
-                    )
                     CsPrinter.printText_FullParm(
                         string,
                         mpTextSize,
+                        textDirection,
                         1,
-                        2,
-                        1,
-                        false,
-                        false
-                    )
-                    CsPrinter.printText_FullParm(
-                        string,
-                        mpTextSize,
-                        2,
-                        2,
-                        2,
-                        false,
-                        false
-                    )
-                    CsPrinter.printText_FullParm(
-                        string,
-                        mpTextSize,
-                        3,
-                        2,
-                        3,
+                        textAlign,
                         false,
                         false
                     )

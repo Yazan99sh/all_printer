@@ -137,8 +137,6 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                         printerObject?.printReyBitmap(logoPath)
                     }
                     hashMap.forEach {
-                        Log.i("ArabicFIXBYYAZAN", "KKK $loremX500")
-                        Log.i("ArabicFIXBYYAZAN", "KKK ${hashMap["$index"]}")
                         if (it.key != "logoPath") {
                             if ("${hashMap["$index"]}".startsWith(prefix = "align")) {
                                 printRey(loremX500, null, textSize, textAlign, textDirection)
@@ -153,26 +151,22 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                                 textSize = "${hashMap["$index"]}".split(":").last().toFloat()
                                 loremX500 = ""
                             } else if (printerObject?.isAllArabic("${hashMap["$index"]}") == true) {
-                                Log.i("ArabicFIXBYYAZAN", "Before $loremX500")
                                 printRey(loremX500, null, textSize, textAlign, textDirection)
-                                Log.i("ArabicFIXBYYAZAN", "After ${hashMap["$index"]}")
                                 printRey(
                                     "${hashMap["$index"]}",
                                     null,
                                     textSize,
-                                    if (textAlign != 1) 2 else textAlign,
+                                    0,
                                     1
                                 )
                                 loremX500 = ""
                             } else if (printerObject?.isProbablyArabic("${hashMap["$index"]}") == true) {
-                                Log.i("ArabicFIXBYYAZAN1", loremX500)
                                 printRey(loremX500, null, textSize, textAlign, textDirection)
-                                Log.i("ArabicFIXBYYAZAN1", "${hashMap["$index"]}")
                                 printRey(
-                                    "${hashMap["$index"]}",
+                                    reorderString("${hashMap["$index"]}"),
                                     null,
                                     textSize,
-                                    if (textAlign != 1) 0 else textAlign,
+                                    2,
                                     1
                                 )
                                 loremX500 = ""
@@ -285,6 +279,40 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     override fun onDetachedFromActivity() {
 
+    }
+    val arabicRegex = "[\\u0600-\\u06FF]+".toRegex()
+
+    fun reorderString(input: String): String {
+        // Step 1: Check for ':' separator and split the string
+        val parts = input.split(":").map { it.trim() }
+        if (parts.size == 2) {
+            val englishPart = parts[0]
+            val arabicOrMixedPart = parts[1]
+
+            // Step 2: Check for '-' separator within the second part
+            val subParts = arabicOrMixedPart.split("-").map { it.trim() }
+            val reorderedArabicOrMixedPart = when {
+                subParts.size == 2 -> "${subParts[1]} - ${subParts[0]}" // Reverse around '-'
+                else -> reorderByArabicStart(arabicOrMixedPart) // No '-' separator, handle by detecting Arabic
+            }
+            return "$reorderedArabicOrMixedPart : $englishPart"
+        }
+
+        // Step 3: If there's no ':' separator, apply Arabic split handling
+        return reorderByArabicStart(input)
+    }
+
+    // Helper function to detect where Arabic starts and reorder accordingly
+    fun reorderByArabicStart(text: String): String {
+        val matchResult = arabicRegex.find(text)
+        return if (matchResult != null) {
+            val index = matchResult.range.first
+            val englishPart = text.substring(0, index).trim()
+            val arabicPart = text.substring(index).trim()
+            "$arabicPart $englishPart"
+        } else {
+            text // No Arabic found, return as is
+        }
     }
 
 }
