@@ -48,46 +48,46 @@ class _MyAppState extends State<MyApp> {
           "$index": "align:1",
           "${++index}": "The Best Company In The World",
           "${++index}": "align:0",
-          "${++index}": "Date:2022-01-30 10:25:35",
-          "${++index}": "Name: Altkamul Printer Test",
-          "${++index}": "Merchent ID: $merchantId",
-          "${++index}": "Terminal ID: 667766776",
-          "${++index}": "Transaction ID: 10000001",
-          "${++index}": "Voucher No: 22-003111",
-          "${++index}": "Car No: 1001k",
+          // "${++index}": "Date:2022-01-30 10:25:35",
+          // "${++index}": "Name: Altkamul Printer Test",
+          // "${++index}": "Merchent ID: $merchantId",
+          // "${++index}": "Terminal ID: 667766776",
+          // "${++index}": "Transaction ID: 10000001",
+          // "${++index}": "Voucher No: 22-003111",
+          // "${++index}": "Car No: 1001k",
           "${++index}": "اسم الزبون: يزن شيخ محمد",
           "${++index}": "Customer Name: يزن شيخ محمد",
-          "${++index}": "Customer No: 971512345678",
-          "${++index}": "******************************",
-          "${++index}": "size:34",
-          "${++index}": "Tax Invoice",
-          "${++index}": "size:24",
-          "${++index}": "******************************",
-          "${++index}": "Title: Exterir Wash Small Car",
-          "${++index}": "service: Wash",
-          "${++index}": "price: 35.00",
-          "${++index}": "qty: 2",
-          "${++index}": "size:17",
-          "${++index}": "------ add ones ------",
-          "${++index}": "-> Kutchab + (4.0 AED X 5.0) = 20.00 AED",
-          "${++index}": "----------------------",
-          "${++index}": "size:24",
+          // "${++index}": "Customer No: 971512345678",
+          // "${++index}": "******************************",
+          // "${++index}": "size:34",
+          // "${++index}": "Tax Invoice",
+          // "${++index}": "size:24",
+          // "${++index}": "******************************",
+          // "${++index}": "Title: Exterir Wash Small Car",
+          // "${++index}": "service: Wash",
+          // "${++index}": "price: 35.00",
+          // "${++index}": "qty: 2",
+          // "${++index}": "size:17",
+          // "${++index}": "------ add ones ------",
+          // "${++index}": "-> Kutchab + (4.0 AED X 5.0) = 20.00 AED",
+          // "${++index}": "----------------------",
+          // "${++index}": "size:24",
           "${++index}": "Title: Exterir Wash - غسلة كاملة",
           "${++index}": "service: Wash غسيل",
           "${++index}": "price: 35.00",
           "${++index}": "qty: 2",
-          "${++index}": "",
-          "${++index}": "Total Qty: 2",
-          "${++index}": "Total Befor Vat: 70.00 AED",
-          "${++index}": "Vat: @5%: 11.00 AED",
-          "${++index}": "-------------------------------",
-          "${++index}": "Total: 71.00 AED",
-          "${++index}": "******************************",
-          "${++index}": "Hi There",
-          "${++index}": "******************************",
-          "${++index}": "City: Dubai UAE Call Us : 05123456789",
-          "${++index}": "-------------------------------",
-          "${++index}": "Thanks you for try our Flutter base POS"
+          // "${++index}": "",
+          // "${++index}": "Total Qty: 2",
+          // "${++index}": "Total Befor Vat: 70.00 AED",
+          // "${++index}": "Vat: @5%: 11.00 AED",
+          // "${++index}": "-------------------------------",
+          // "${++index}": "Total: 71.00 AED",
+          // "${++index}": "******************************",
+          // "${++index}": "Hi There",
+          // "${++index}": "******************************",
+          // "${++index}": "City: Dubai UAE Call Us : 05123456789",
+          // "${++index}": "-------------------------------",
+          // "${++index}": "Thanks you for try our Flutter base POS"
         };
       });
     } catch (e) {
@@ -148,7 +148,7 @@ class _MyAppState extends State<MyApp> {
       // platformVersion =
       //     await _allPrinterPlugin.printImage(imagePath: fullPath) ?? '';
     }
-    var ii = convertToFastPrint(invoice);
+    //var ii = convertToFastPrint(invoice);
     platformVersion = await _allPrinterPlugin.print(invoice: invoice) ?? '';
 
     // platformVersion =
@@ -345,10 +345,6 @@ class _MyAppState extends State<MyApp> {
       } else {
         if (e.value.toString() != '' || e.value != null) {
           line = '${line + e.value} \n';
-          if (e.value.toString().isContainArabicLatter &&
-              e.value.toString().isContainEnglishLatter) {
-            line += '';
-          }
         }
       }
     }

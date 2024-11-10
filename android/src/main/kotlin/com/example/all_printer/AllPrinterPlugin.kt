@@ -137,6 +137,8 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                         printerObject?.printReyBitmap(logoPath)
                     }
                     hashMap.forEach {
+                        Log.i("ArabicFIXBYYAZAN", "KKK $loremX500")
+                        Log.i("ArabicFIXBYYAZAN", "KKK ${hashMap["$index"]}")
                         if (it.key != "logoPath") {
                             if ("${hashMap["$index"]}".startsWith(prefix = "align")) {
                                 printRey(loremX500, null, textSize, textAlign, textDirection)
@@ -165,7 +167,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                             } else if (printerObject?.isProbablyArabic("${hashMap["$index"]}") == true) {
                                 Log.i("ArabicFIXBYYAZAN1", loremX500)
                                 printRey(loremX500, null, textSize, textAlign, textDirection)
-                                Log.i("ArabicFIXBYYAZAN1", loremX500)
+                                Log.i("ArabicFIXBYYAZAN1", "${hashMap["$index"]}")
                                 printRey(
                                     "${hashMap["$index"]}",
                                     null,
