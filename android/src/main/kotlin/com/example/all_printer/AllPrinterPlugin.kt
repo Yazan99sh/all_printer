@@ -292,8 +292,9 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             // Step 2: Check for '-' separator within the second part
             val subParts = arabicOrMixedPart.split("-").map { it.trim() }
             val reorderedArabicOrMixedPart = when {
-                subParts.size == 2 -> "${subParts[1]} - ${subParts[0]}" // Reverse around '-'
-                else -> reorderByArabicStart(arabicOrMixedPart) // No '-' separator, handle by detecting Arabic
+                subParts.size == 2 ->
+                   if (!arabicRegex.containsMatchIn(subParts[0])) "${subParts[0]} - ${subParts[1]}" else "${subParts[1]} - ${subParts[0]}" // Reverse only if Arabic is in the second part
+                else -> reorderByArabicStart(arabicOrMixedPart) // No '-' separator or English part first, handle by detecting Arabic
             }
             return "$reorderedArabicOrMixedPart : $englishPart"
         }
@@ -309,7 +310,13 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             val index = matchResult.range.first
             val englishPart = text.substring(0, index).trim()
             val arabicPart = text.substring(index).trim()
-            "$arabicPart $englishPart"
+
+            // Check if Arabic part is already at the start
+            if (index == 0) {
+                "$arabicPart $englishPart" // Arabic is first, so keep the order
+            } else {
+                "$arabicPart $englishPart" // English is first, so reverse
+            }
         } else {
             text // No Arabic found, return as is
         }
