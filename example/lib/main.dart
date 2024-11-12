@@ -73,6 +73,7 @@ class _MyAppState extends State<MyApp> {
           // "${++index}": "----------------------",
           // "${++index}": "size:24",
           "${++index}": "Title: Exterir Wash - غسلة كاملة",
+          "${++index}": "Name: TEA شاي",
           "${++index}": "provider: غسلة كاملة - Exterir Wash",
           "${++index}": "نوع الطوي : مطوي - fold",
           "${++index}": "نوع الطوي : مطوي fold",

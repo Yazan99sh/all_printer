@@ -305,20 +305,33 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     // Helper function to detect where Arabic starts and reorder accordingly
     fun reorderByArabicStart(text: String): String {
-        val matchResult = arabicRegex.find(text)
-        return if (matchResult != null) {
-            val index = matchResult.range.first
-            val englishPart = text.substring(0, index).trim()
-            val arabicPart = text.substring(index).trim()
+        // Regular expression to match Arabic characters
+        val arabicRegex = Regex("[\\u0600-\\u06FF\\s]+")
 
-            // Check if Arabic part is already at the start
-            if (index == 0) {
-                "$arabicPart $englishPart" // Arabic is first, so keep the order
+        // Check if the first character is Arabic
+        val isArabicFirst = arabicRegex.containsMatchIn(text.substring(0, 1))
+
+        return if (isArabicFirst) {
+
+            // Find the first Arabic character's position in the text
+            val matchResult = arabicRegex.find(text)
+            if (matchResult != null) {
+                val index = matchResult.range.last
+                if (matchResult.range.first == 0 && index == text.length - 1) {
+                    return text
+                }
+                val arabicPart = text.substring(0, index).trim()
+                val englishPart = text.substring(index).trim()
+                Log.e("matchResult", matchResult.range.toString())
+                Log.e("index", index.toString())
+                Log.e("arabicPart", arabicPart)
+                Log.e("englishPart", englishPart)
+                "$englishPart $arabicPart" // Arabic is not at the start, so reorder
             } else {
-                "$arabicPart $englishPart" // English is first, so reverse
+                text // No Arabic found, return as is
             }
         } else {
-            text // No Arabic found, return as is
+            text
         }
     }
 
