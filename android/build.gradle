@@ -48,6 +48,8 @@ android {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     // IMIN
     implementation files('libs/IminLibs.jar')
     implementation files('libs/iminPrinterSDK.jar')

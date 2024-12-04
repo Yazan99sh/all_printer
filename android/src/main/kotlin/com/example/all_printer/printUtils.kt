@@ -4,6 +4,7 @@ package com.example.all_printer
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
+import android.graphics.BitmapFactory.Options
 import android.os.Build
 import android.os.Environment
 import android.os.RemoteException
@@ -23,6 +24,12 @@ import com.mobiiot.androidqapi.api.Utils.AndroidBmpUtil
 import com.mobiiot.androidqapi.api.Utils.PrinterServiceUtil
 import com.mobiiot.androidqapi.api.Utils.ServiceUtil
 import com.nbbse.mobiprint3.Printer
+import com.paydevice.smartpos.sdk.ImageUtils
+import com.paydevice.smartpos.sdk.SmartPosException
+import com.paydevice.smartpos.sdk.cashdrawer.CashDrawer
+import com.paydevice.smartpos.sdk.printer.PrinterManager
+import com.paydevice.smartpos.sdk.printer.SerialPortPrinter
+import com.paydevice.smartpos.sdk.printer.UsbPrinter
 import com.sagereal.printer.PrinterInterface
 import com.sunmi.printerx.enums.Align
 import com.sunmi.printerx.enums.ErrorLevel
@@ -45,7 +52,35 @@ class PrintingMethods {
     companion object {
         @SuppressLint("StaticFieldLeak")
         var LoginActivity: Context? = null
-
+        var sPrinter: com.paydevice.smartpos.sdk.printer.Printer? = null
+        private val smartPOSDevices: PrinterManager? by lazy {
+            if (Build.MODEL == "FH100-A3-D") {
+                //if usb printer no found then try serialport printer
+                try {
+                    //80mm USB printer
+                    sPrinter = UsbPrinter(LoginActivity)
+                    (sPrinter as UsbPrinter).selectBuiltInPrinter()
+                    (sPrinter as UsbPrinter).open()
+                    (sPrinter as UsbPrinter).close()
+                } catch (e: SmartPosException) {
+                    Log.d(
+                        "ALLPRINTER",
+                        "no usb printer,try serialport printer"
+                    )
+                    //58mm serialport printer
+                    sPrinter = SerialPortPrinter()
+                    (sPrinter as SerialPortPrinter).selectBuiltInPrinter()
+                }
+                PrinterManager(
+                    sPrinter,
+                    if ((sPrinter!!.type == PrinterManager.PRINTER_TYPE_USB)
+                    ) PrinterManager.TYPE_PAPER_WIDTH_80MM
+                    else PrinterManager.TYPE_PAPER_WIDTH_58MM
+                )
+            } else {
+                null
+            }
+        }
         var mIminPrintUtils: IminPrintUtils? = null
         private val printerX: PrinterViewModel? by lazy {
             if (Build.MODEL == "V3_MIX_EDLA_GL") {
@@ -76,6 +111,22 @@ class PrintingMethods {
         Log.d("PosType", Constant.posType)
         Log.d("ALL PRINTER CHANGELOGS", "0.0.1")
         when (Constant.posType) {
+            "FH100-A3-D" -> {
+                try {
+                    smartPOSDevices!!.connect()
+                    //if (mPrinterManager.getPrinterType() == PrinterManager.PRINTER_TYPE_SERIAL) {
+                    //	if (mPrinterManager.cmdGetPrinterModel() == PrinterManager.PRINTER_MODEL_PRN2103) {
+                    //		Log.d(TAG,"model:PRN 2103");
+                    //	} else {
+                    //		Log.d(TAG,"model:UNKNOWN");
+                    //	}
+                    //}
+                    smartPOSDevices!!.checkPaper()
+                } catch (e: SmartPosException) {
+                    Log.d("SmartPOSException", e.message.toString())
+                }
+            }
+
             "MobiPrint" -> {
                 print = Printer.getInstance()
             }
@@ -426,6 +477,10 @@ class PrintingMethods {
                     textDirection == 1
                 )
 
+                "FH100-A3-D" -> {
+
+                }
+
                 "WISENET5" -> try {
                     if (size > 24) {
                         mPrinter!!.printString(
@@ -673,7 +728,9 @@ class PrintingMethods {
                 } catch (ex: java.lang.Exception) {
                     Log.e("Sunmi Exception Drawer", ex.toString() + "")
                 }
-
+                "FH100-A3-D" -> {
+                    CashDrawer.open()
+                }
                 "D4-505", "D4", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> {
                     IminSDKManager.opencashBox()
                 }
@@ -682,12 +739,64 @@ class PrintingMethods {
             Log.e("10 Exception OpenDrawer", ex.toString() + "")
         }
     }
-
+    private fun printLogoFromNVRAM() {
+        try {
+            smartPOSDevices!!.cmdSetAlignMode(PrinterManager.ALIGN_MIDDLE)
+            smartPOSDevices!!.cmdPrintBitmapFromNVRAM(1, PrinterManager.BITMAP_ZOOM_NONE)
+            smartPOSDevices!!.cmdLineFeed()
+        } catch (e: SmartPosException) {
+        }
+    }
     fun printReyBitmap(string: String) {
         Log.d("printReyBitmap", "called")
         checkIminPrinter()
         try {
             when (Constant.posType) {
+                "FH100-A3-D" -> {
+
+                    //NOTE: we recommend skip bitmap print if always used battery for power supply.because low battery voltage maybe cause bitmap print failed.
+                    try {
+                        //set heating parameter for black white logo
+                        smartPOSDevices!!.cmdSetHeatingParam(7, 100, 2)
+                        //usually,print logo at first.you could choose print logo form NVRAM or directly
+                        //for serialport printer we recommend print logo from NVRAM for good print quality
+                        if (smartPOSDevices!!.getPrinterType() == PrinterManager.PRINTER_TYPE_SERIAL) {
+                            if (SmartPosUtils.getNvramFlag(LoginActivity)) {
+                                printLogoFromNVRAM()
+                            }
+                        }
+
+                        //print logo
+                        val options = BitmapFactory.Options()
+                        options.inTargetDensity = 0
+                        options.inScaled = false //keep original size
+                        var tmp = BitmapFactory.decodeStream(FileInputStream(string), null, options)
+                        //var tmp = BitmapFactory.decodeResource(LoginActivity!!.getResources(), R.drawable.rendered_image, options);
+
+                        var logo = ImageUtils.bmpToGrayDithering(tmp, 120, false, ImageUtils.DitherType.ATKINSON)
+                        //var logo = ImageUtils.bmpToBlackWhite(tmp, 215, true) //black white inverse
+                        val totalDots: Int = smartPOSDevices!!.dotsPerLine
+                        var xPos = (totalDots - logo!!.width) shr 1 //horizontal center
+                        val yPos = 0
+                        //the more black area of bitmap, the more delay(slower speed)
+                        //smartPOSDevices!!.cmdBitmapPrintEx(logo, xPos, yPos)
+                        smartPOSDevices!!.cmdBitmapPrint(logo, xPos, 0)
+                        smartPOSDevices!!.cmdLineFeed()
+                        tmp!!.recycle()
+                        logo.recycle()
+
+                        //restore heating parameter for text
+                        if (smartPOSDevices!!.isBuiltInSlow()) {
+                            smartPOSDevices!!.cmdSetHeatingParam(7, 140, 2)
+                        } else {
+                            smartPOSDevices!!.cmdSetHeatingParam(15, 100, 10)
+                        }
+                    } catch (e: SmartPosException) {
+                        Log.d("SmartPOSException", e.toString())
+                        Log.d("SmartPOSException", e.printStackTrace().toString())
+                    }
+                }
+
                 "MobiPrint" -> print!!.printBitmap(string)
                 "WISENET5" -> {
                     val options = BitmapFactory.Options()
