@@ -55,22 +55,9 @@ class PrintingMethods {
         var sPrinter: com.paydevice.smartpos.sdk.printer.Printer? = null
         private val smartPOSDevices: PrinterManager? by lazy {
             if (Build.MODEL == "FH100-A3-D") {
-                //if usb printer no found then try serialport printer
-                try {
-                    //80mm USB printer
-                    sPrinter = UsbPrinter(LoginActivity)
-                    (sPrinter as UsbPrinter).selectBuiltInPrinter()
-                    (sPrinter as UsbPrinter).open()
-                    (sPrinter as UsbPrinter).close()
-                } catch (e: SmartPosException) {
-                    Log.d(
-                        "ALLPRINTER",
-                        "no usb printer,try serialport printer"
-                    )
-                    //58mm serialport printer
-                    sPrinter = SerialPortPrinter()
-                    (sPrinter as SerialPortPrinter).selectBuiltInPrinter()
-                }
+                //58mm serialport printer
+                sPrinter = SerialPortPrinter()
+                (sPrinter as SerialPortPrinter).selectBuiltInPrinter()
                 PrinterManager(
                     sPrinter,
                     if ((sPrinter!!.type == PrinterManager.PRINTER_TYPE_USB)
