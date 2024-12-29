@@ -237,14 +237,13 @@ class _MyAppState extends State<MyApp> {
                   child: Text("Print Finish", textAlign: TextAlign.center),
                 ),
               ),
-              // ElevatedButton(
-              //   onPressed: () => getPlatformVersion(),
-              //   child: const SizedBox(
-              //     width: double.infinity,
-              //     child: Text("Print invoice as image testing",
-              //         textAlign: TextAlign.center),
-              //   ),
-              // ),
+              ElevatedButton(
+                onPressed: () => installPackage('/storage/emulated/0/download/Catalogak_POS_v2.0.0-SHA.apk', 'ae.altkamul.smart_epay_charity_pos_flutter'),
+                child: const SizedBox(
+                  width: double.infinity,
+                  child: Text("install package", textAlign: TextAlign.center),
+                ),
+              ),
               ElevatedButton(
                 onPressed: () => getPlatformVersion(),
                 child: const SizedBox(
@@ -321,6 +320,10 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _platformVersion = platformVersion!;
     });
+  }
+
+  installPackage(String path, String packageName) async {
+    await _allPrinterPlugin.installPackage(path, packageName);
   }
 
   Map convertToFastPrint(Map inv) {

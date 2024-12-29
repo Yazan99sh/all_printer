@@ -21,7 +21,7 @@ abstract class AllPrinterPlatform extends PlatformInterface {
   ///
   /// Defaults to [MethodChannelAllPrinter].
   static AllPrinterPlatform get instance => _instance;
-  
+
   /// Platform-specific implementations should set this with their own
   /// platform-specific class that extends [AllPrinterPlatform] when
   /// they register themselves.
@@ -34,32 +34,40 @@ abstract class AllPrinterPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<String?> print(dynamic invoice){
+  Future<bool?> installPackage(String path , String packageName) {
+    throw UnimplementedError('installPackage() has not been implemented.');
+  }
+
+  Future<String?> print(dynamic invoice) {
     throw UnimplementedError('print() has not been implemented.');
   }
 
-  Future<String?> printLine(String line){
+  Future<String?> printLine(String line) {
     throw UnimplementedError('printLine() has not been implemented.');
   }
 
-  Future<String?> printImage(String imagePath){
+  Future<String?> printImage(String imagePath) {
     throw UnimplementedError('printImage() has not been implemented.');
   }
-  Future<String?> getDeviceSerial(){
+
+  Future<String?> getDeviceSerial() {
     throw UnimplementedError('getDeviceSerial() has not been implemented.');
   }
-  Future<void> openDrawer(){
+
+  Future<void> openDrawer() {
     throw UnimplementedError('openDrawer() has not been implemented.');
   }
+
   Future download(Dio dio, String url, String savePath) async {
     throw UnimplementedError('download() has not been implemented.');
   }
 
   void showDownloadProgress(received, total) {
-    throw UnimplementedError('showDownloadProgress() has not been implemented.');
+    throw UnimplementedError(
+        'showDownloadProgress() has not been implemented.');
   }
 
-  Future<String> getDownloadPath(String? uniqueId)async {
+  Future<String> getDownloadPath(String? uniqueId) async {
     throw UnimplementedError('getDownloadPath() has not been implemented.');
   }
 
@@ -70,5 +78,4 @@ abstract class AllPrinterPlatform extends PlatformInterface {
   Future<String?> printQrCode(String? qrData) {
     throw UnimplementedError('printQrCode() has not been implemented.');
   }
-
 }

@@ -59,6 +59,15 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
             }
 
+            "installPackage" -> {
+                val hashMap = call.arguments as HashMap<*, *>
+                printerObject?.installPackage(hashMap["path"].toString(), hashMap["packageName"].toString())
+                result.success(
+                    true
+                )
+
+            }
+
             "printReyFinish" -> {
                 try {
                     printerObject?.printReyFinish()
@@ -280,6 +289,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     override fun onDetachedFromActivity() {
 
     }
+
     val arabicRegex = "[\\u0600-\\u06FF]+".toRegex()
 
     fun reorderString(input: String): String {
@@ -293,7 +303,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             val subParts = arabicOrMixedPart.split("-").map { it.trim() }
             val reorderedArabicOrMixedPart = when {
                 subParts.size == 2 ->
-                   if (!arabicRegex.containsMatchIn(subParts[0])) "${subParts[0]} - ${subParts[1]}" else "${subParts[1]} - ${subParts[0]}" // Reverse only if Arabic is in the second part
+                    if (!arabicRegex.containsMatchIn(subParts[0])) "${subParts[0]} - ${subParts[1]}" else "${subParts[1]} - ${subParts[0]}" // Reverse only if Arabic is in the second part
                 else -> reorderByArabicStart(arabicOrMixedPart) // No '-' separator or English part first, handle by detecting Arabic
             }
             return "$reorderedArabicOrMixedPart : $englishPart"

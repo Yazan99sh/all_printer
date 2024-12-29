@@ -18,6 +18,7 @@ import com.imin.library.IminSDKManager
 import com.imin.library.SystemPropManager
 import com.imin.printerlib.IminPrintUtils
 import com.mobiiot.androidqapi.api.CsDevice
+import com.mobiiot.androidqapi.api.CsPackage
 import com.mobiiot.androidqapi.api.CsPrinter
 import com.mobiiot.androidqapi.api.Utils.AndroidBmpUtil
 import com.mobiiot.androidqapi.api.Utils.PrinterServiceUtil
@@ -273,6 +274,31 @@ class PrintingMethods {
             Log.e("POS", e.message ?: "SOME ERROR HAPPENED");
         }
         return "NO SERIAL OR SIM IMEI"
+    }
+
+    fun installPackage(path: String, packageName: String): Boolean {
+        try {
+            when (Constant.posType) {
+                "MobiPrint",
+                "WISENET5",
+                "MP3_Plus",
+                "MobiPrint 4+",
+                "MP4",
+                "MobiPrint4_Plus",
+                "Mobiwire MP4",
+                "k80hd_bsp_fwv_512m"
+                -> {
+                    val pos = CsPackage.installApp(path, packageName)
+                    Log.e("POS", pos.toString());
+                    return true
+                }
+
+                else -> return false
+            }
+        } catch (e: Exception) {
+            Log.e("POS", e.message ?: "SOME ERROR HAPPENED");
+        }
+        return false
     }
 
     @Throws(RemoteException::class)
@@ -1083,7 +1109,7 @@ class PrintingMethods {
 
     fun returnLines(): String {
         return when (Constant.posType) {
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI","V2_PRO", "D4-505", "D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "------------------------------------------------"
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "D4-505", "D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "------------------------------------------------"
             "MP3_Plus", "MP4", "Mobiwire MP4", "MobiPrint4_Plus", "k80hd_bsp_fwv_512m" -> "--------------------------------"
             else -> "--------------------------------"
         }

@@ -21,7 +21,13 @@ class MethodChannelAllPrinter extends AllPrinterPlatform {
     AppLogger.logDebug("getPlatformVersion() : ${version.toString()}");
     return version;
   }
-
+  @override
+  Future<bool?> installPackage(String path, String packageName) async {
+    final result =
+    await methodChannel.invokeMethod<bool>('installPackage', {'path': path, 'packageName': packageName});
+    AppLogger.logDebug("installPackage() : ${result.toString()}");
+    return result;
+  }
   @override
   Future<String?> print(dynamic invoice) async {
     final printResult =

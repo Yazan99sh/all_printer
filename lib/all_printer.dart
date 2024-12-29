@@ -10,6 +10,10 @@ class AllPrinter {
     return AllPrinterPlatform.instance.getPlatformVersion();
   }
 
+  Future<bool?> installPackage(String path, String packageName) {
+    return AllPrinterPlatform.instance.installPackage(path, packageName);
+  }
+
   Future<String?> getDeviceSerial() {
     return AllPrinterPlatform.instance.getDeviceSerial();
   }
