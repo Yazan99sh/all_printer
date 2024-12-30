@@ -1,12 +1,15 @@
 package com.example.all_printer
 
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.*
 import android.os.Build
 import android.os.Environment
 import android.os.RemoteException
+import android.telephony.TelephonyManager
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
@@ -39,7 +42,7 @@ import java.io.*
 import java.net.URL
 import java.nio.channels.Channels
 import java.util.*
-
+import androidx.core.app.ActivityCompat;
 
 class PrintingMethods {
 
@@ -220,6 +223,19 @@ class PrintingMethods {
         }
     }
 
+    fun getIMEI(): String? {
+        val telephonyManager =
+            LoginActivity!!.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        if (ActivityCompat.checkSelfPermission(
+                LoginActivity!!,
+                Manifest.permission.READ_PHONE_STATE
+            ) !== PackageManager.PERMISSION_GRANTED
+        ) {
+            // Handle the case where permission is not granted
+            return null
+        }
+        return telephonyManager.deviceId // Deprecated in API 26
+    }
     fun getDevicePos(): String {
         try {
             when (Constant.posType) {
@@ -234,13 +250,18 @@ class PrintingMethods {
                 -> {
                     val pos = CsDevice.getDeviceInformation()
                     Log.e("POS", pos.serial_number);
-                    return pos.sim1_imei
+                    //Log.e("POS", getIMEI().toString());
+                    // check if sdk is more than 28
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        return pos.sim1_imei
+                    }
+                    return getIMEI().toString()
                 }
 
                 "T2mini",
                 "T2mini_s",
                 "T1mini-G",
-                "D2mini", "T2s", "K2_PRO", "K2_MINI" -> {
+                "D2mini", "T2s", "K2_PRO", "K2_MINI" , "V2_PRO" -> {
                     val pos = AidlUtil.getInstance().sn
                     Log.e("POS", pos);
                     return pos.replace(Regex("[^0-9]"), "")
