@@ -100,7 +100,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                             textAlign = 0
                             textDirection = 1
                         }
-                        printerObject?.printRey("${call.arguments}", 24F, textAlign, textDirection)
+                        printerObject?.printRey("${call.arguments}", 1, textAlign, textDirection)
                         result.success("success !")
                     } catch (e: Exception) {
                         result.success("${e.message}");
@@ -137,7 +137,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     val logoPath = call.argument<String>("logoPath")
 
                     var loremX500 = ""
-                    var textSize: Float = 24F
+                    var textSize = 1
                     var textAlign = 0
                     var textDirection = 0
                     var index = 0
@@ -148,36 +148,20 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     hashMap.forEach {
                         if (it.key != "logoPath") {
                             if ("${hashMap["$index"]}".startsWith(prefix = "align")) {
-                                printRey(loremX500, null, textSize, textAlign, textDirection)
+                                printRey(loremX500, null, textSize,textAlign,textDirection)
                                 textAlign = "${hashMap["$index"]}".split(":").last().toInt()
                                 loremX500 = ""
-                            } else if ("${hashMap["$index"]}".startsWith(prefix = "dir")) {
-                                printRey(loremX500, null, textSize, textAlign, textDirection)
+                            }else if ("${hashMap["$index"]}".startsWith(prefix = "dir")) {
+                                printRey(loremX500, null, textSize,textAlign,textDirection)
                                 textDirection = "${hashMap["$index"]}".split(":").last().toInt()
                                 loremX500 = ""
                             } else if ("${hashMap["$index"]}".startsWith(prefix = "size")) {
-                                printRey(loremX500, null, textSize, textAlign, textDirection)
-                                textSize = "${hashMap["$index"]}".split(":").last().toFloat()
-                                loremX500 = ""
-                            } else if (printerObject?.isAllArabic("${hashMap["$index"]}") == true) {
-                                printRey(loremX500, null, textSize, textAlign, textDirection)
-                                printRey(
-                                    "${hashMap["$index"]}",
-                                    null,
-                                    textSize,
-                                    0,
-                                    1
-                                )
+                                printRey(loremX500, null, textSize,textAlign,textDirection)
+                                textSize = "${hashMap["$index"]}".split(":").last().toInt()
                                 loremX500 = ""
                             } else if (printerObject?.isProbablyArabic("${hashMap["$index"]}") == true) {
-                                printRey(loremX500, null, textSize, textAlign, textDirection)
-                                printRey(
-                                    reorderString("${hashMap["$index"]}"),
-                                    null,
-                                    textSize,
-                                    2,
-                                    1
-                                )
+                                printRey(loremX500, null, textSize,textAlign,textDirection)
+                                printRey("${hashMap["$index"]}", null, textSize,textAlign,textDirection)
                                 loremX500 = ""
                             } else {
                                 loremX500 += "\n${hashMap["$index"]}"
@@ -230,7 +214,7 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private fun printRey(
         loremX500: String,
         logoPath: String?,
-        textSize: Float,
+        textSize: Int,
         textAlign: Int,
         textDirection: Int = 1
     ): String {

@@ -461,7 +461,7 @@ class PrintingMethods {
         }
     }
 
-    fun printRey(string: String, size: Float, textAlign: Int, textDirection: Int) {
+    fun printRey(string: String, size: Int, textAlign: Int, textDirection: Int) {
         try {
             checkIminPrinter()
             Log.e("printReyprintRey", "$string size:$size")
@@ -488,23 +488,23 @@ class PrintingMethods {
                 }
 
                 "MP3_Plus", "MobiPrint 4+", "MobiPrint4_Plus", "MP4", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> try {
-                    var mpTextSize = if (size > 24) 1 else if (size > 18) 0 else 0
-                    CsPrinter.printText_FullParm(
-                        string,
-                        mpTextSize,
-                        textDirection,
-                        1,
-                        textAlign,
-                        false,
-                        false
-                    )
+                    if (isProbablyArabic(string))
+                        CsPrinter.printText_FullParm(
+                            string,
+                            size - 1,
+                            1,
+                            1,
+                            textAlign,
+                            false,
+                            false
+                        ) else CsPrinter.printText_FullParm(string, size - 1, 0, 2, textAlign, false, false)
                 } catch (ex: java.lang.Exception) {
                     Log.e("Rey Exception MP3_Plus", ex.toString() + "")
                 }
 
                 "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO" -> try {
                     AidlUtil.getInstance()
-                        .printText(string, size, false, false, textAlign)
+                        .printText(string, 24F, false, false, textAlign)
                 } catch (ex: java.lang.Exception) {
                     Log.e("Rey Exception Mobiwire", ex.toString() + "")
                 }
@@ -803,7 +803,7 @@ class PrintingMethods {
                                 ?.getPath()
                                 .toString() + "/unzipFolder/files/10001002/logo.bmp"
                         )
-                        printRey("\n", 24F, 0, 1)
+                        printRey("\n", 1, 0, 1)
 
 //                    if(true)
 //                        return;
@@ -863,7 +863,7 @@ class PrintingMethods {
                     } catch (ex: java.lang.Exception) {
                         Log.e("printReyprintRey", ex.message!!)
                     }
-                    printRey("\n", 24F, 0, 1)
+                    printRey("\n", 1, 0, 1)
                 }
 
                 "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO" -> {
