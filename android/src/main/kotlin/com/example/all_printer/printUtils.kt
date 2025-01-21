@@ -249,7 +249,6 @@ class PrintingMethods {
                 "k80hd_bsp_fwv_512m"
                 -> {
                     val pos = CsDevice.getDeviceInformation()
-                    Log.e("POS", pos.serial_number);
                     //Log.e("POS", getIMEI().toString());
                     // check if sdk is more than 28
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
