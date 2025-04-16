@@ -80,12 +80,45 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
             "printQrCode" -> {
                 try {
-                    printerObject?.printQrCode(null, "\n ${call.arguments} \n")
-                    result.success("success !")
+                    val arguments = call.arguments as? Map<String, Any>
+                    if (arguments != null) {
+                        val qrData = arguments["qrData"] as? String
+                        val saudiQrData = arguments["saudiQrData"] as? Map<String, String>
+                        
+                        if (saudiQrData != null && Constant.posType.equals("MP4") || 
+                            Constant.posType.equals("MP3_Plus") || 
+                            Constant.posType.equals("MobiPrint 4+") || 
+                            Constant.posType.equals("MobiPrint4_Plus") || 
+                            Constant.posType.equals("Mobiwire MP4") || 
+                            Constant.posType.equals("k80hd_bsp_fwv_512m")) {
+                            
+                            val sellerName = saudiQrData!!["sellerName"] ?: "Seller"
+                            val vatNumber = saudiQrData["vatNumber"] ?: "123456789012345"
+                            val timestamp = saudiQrData["timestamp"] ?: "2023-01-01T00:00:00Z"
+                            val invoiceTotal = saudiQrData["invoiceTotal"] ?: "0.00"
+                            val vatAmount = saudiQrData["vatAmount"] ?: "0.00"
+                            
+                            val encodedQr = printerObject?.generateZATCAQRCodeBase64(
+                                sellerName,
+                                vatNumber,
+                                timestamp,
+                                invoiceTotal,
+                                vatAmount
+                            )
+                            
+                            printerObject?.printQrCode(null, encodedQr)
+                        } else {
+                            printerObject?.printQrCode(null, qrData)
+                        }
+                        result.success("success !")
+                    } else {
+                        // Fallback for backward compatibility
+                        printerObject?.printQrCode(null, "\n ${call.arguments} \n")
+                        result.success("success !")
+                    }
                 } catch (e: Exception) {
                     result.success("${e.message}");
                 }
-
             }
 
             "printLine" -> {

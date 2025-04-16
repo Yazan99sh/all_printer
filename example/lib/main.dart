@@ -238,7 +238,9 @@ class _MyAppState extends State<MyApp> {
                 ),
               ),
               ElevatedButton(
-                onPressed: () => installPackage('/storage/emulated/0/download/Catalogak_POS_v2.0.0-SHA.apk', 'ae.altkamul.smart_epay_charity_pos_flutter'),
+                onPressed: () => installPackage(
+                    '/storage/emulated/0/download/Catalogak_POS_v2.0.0-SHA.apk',
+                    'ae.altkamul.smart_epay_charity_pos_flutter'),
                 child: const SizedBox(
                   width: double.infinity,
                   child: Text("install package", textAlign: TextAlign.center),
@@ -306,7 +308,15 @@ class _MyAppState extends State<MyApp> {
   printQrCode() async {
     String platformVersion = 'starting ... ';
     platformVersion = await _allPrinterPlugin.printQrCode(
-            qrData: "https://stg.catalogak.info/index.html") ??
+            qrData:
+                "NONONON",
+            saudiQrData: {
+              "sellerName": "My Store",
+              "vatNumber": "123456789012345",
+              "timestamp": "2023-06-12T15:30:00Z",
+              "invoiceTotal": "150.00",
+              "vatAmount": "15.00"
+            }) ??
         '';
     _allPrinterPlugin.printReyFinish();
     setState(() {

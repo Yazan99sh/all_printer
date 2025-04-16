@@ -236,6 +236,7 @@ class PrintingMethods {
         }
         return telephonyManager.deviceId // Deprecated in API 26
     }
+
     fun getDevicePos(): String {
         try {
             when (Constant.posType) {
@@ -260,7 +261,7 @@ class PrintingMethods {
                 "T2mini",
                 "T2mini_s",
                 "T1mini-G",
-                "D2mini", "T2s", "K2_PRO", "K2_MINI" , "V2_PRO" -> {
+                "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO" -> {
                     val pos = AidlUtil.getInstance().sn
                     Log.e("POS", pos);
                     return pos.replace(Regex("[^0-9]"), "")
@@ -560,6 +561,27 @@ class PrintingMethods {
         }
     }
 
+    fun toTLV(tag: Int, value: String): ByteArray {
+        val valueBytes = value.toByteArray(Charsets.UTF_8)
+        return byteArrayOf(tag.toByte()) + byteArrayOf(valueBytes.size.toByte()) + valueBytes
+    }
+
+    fun generateZATCAQRCodeBase64(
+        sellerName: String,
+        vatNumber: String,
+        timestamp: String,
+        invoiceTotal: String,
+        vatAmount: String
+    ): String {
+        val tlvBytes = toTLV(1, sellerName) +
+                toTLV(2, vatNumber) +
+                toTLV(3, timestamp) +
+                toTLV(4, invoiceTotal) +
+                toTLV(5, vatAmount)
+
+        return Base64.getEncoder().encodeToString(tlvBytes)
+    }
+
     fun printQrCode(bitmap: Bitmap?, string: String?) {
         try {
             checkIminPrinter()
@@ -586,9 +608,16 @@ class PrintingMethods {
 
                 "MP3_Plus", "MobiPrint 4+", "MP4", "MobiPrint4_Plus", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> try {
                     try {
+                        Log.e("MobiPrint", Constant.posType.toString() + "QR1")
+                        // Check if string contains valid data to be used
+                        Log.e("MobiPrint QR Data", string ?: "null")
+                        
+                        // Use the provided string for QR code generation
+                        val qrData = string ?: ""                        
+                        Log.e("MobiPrint", Constant.posType.toString() + "$qrData")
                         CsPrinter.printBitmap(
                             CsPrinter.createBarQrCode(
-                                string,
+                                qrData,
                                 BarcodeFormat.QR_CODE,
                                 384,
                                 384

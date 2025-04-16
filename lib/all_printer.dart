@@ -61,7 +61,7 @@ class AllPrinter {
     return await AllPrinterPlatform.instance.getDownloadPath(uniqueId);
   }
 
-  Future<String?> printQrCode({required String? qrData}) async {
-    return await AllPrinterPlatform.instance.printQrCode(qrData);
+  Future<String?> printQrCode({required String? qrData, Map<String, String>? saudiQrData}) async {
+    return await AllPrinterPlatform.instance.printQrCode(qrData, saudiQrData: saudiQrData);
   }
 }

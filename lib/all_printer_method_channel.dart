@@ -45,9 +45,15 @@ class MethodChannelAllPrinter extends AllPrinterPlatform {
   }
 
   @override
-  Future<String?> printQrCode(String? qrData) async {
+  Future<String?> printQrCode(String? qrData, {Map<String, String>? saudiQrData}) async {
+    Map<String, dynamic> params = {'qrData': qrData};
+    
+    if (saudiQrData != null) {
+      params['saudiQrData'] = saudiQrData;
+    }
+    
     final printResult =
-        await methodChannel.invokeMethod<String>('printQrCode', qrData);
+        await methodChannel.invokeMethod<String>('printQrCode', params);
     AppLogger.logDebug("printQrCode() : ${printResult.toString()}");
     return printResult;
   }
