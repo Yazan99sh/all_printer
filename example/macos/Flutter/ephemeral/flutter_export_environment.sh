@@ -1,6 +1,6 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=/Users/altkamul-flutter/dev/flutter"
+export "FLUTTER_ROOT=/Users/altkamul-flutter/development/flutter_versions/flutter"
 export "FLUTTER_APPLICATION_PATH=/Users/altkamul-flutter/Desktop/Yazan Desktop/Altkamul Projects/all_printer/example"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_BUILD_DIR=build"

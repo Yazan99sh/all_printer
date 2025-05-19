@@ -39,7 +39,6 @@ class _MyAppState extends State<MyApp> {
     //   Invoice(key: 'star1', value: "****************&&**************"),
     // ]);
 
-    //
     try {
       // var response = await Dio().get('http://213.159.5.155:410/invoice.json');
       var index = 0;
@@ -171,6 +170,7 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _platformVersion = platformVersion;
     });
+  
   }
 
   @override
