@@ -901,7 +901,7 @@ class PrintingMethods {
                     AidlUtil.getInstance().printBitmap(bitmap, 0)
                 }
 
-                "V3_MIX_EDLA_GL" -> {
+                "V3_MIX_EDLA_GL" , "V3_MIX_STD" -> {
                     val options = BitmapFactory.Options()
                     options.inPreferredConfig = Bitmap.Config.ARGB_8888
                     val bitmap = BitmapFactory.decodeStream(FileInputStream(string), null, options)
