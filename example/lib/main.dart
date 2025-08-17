@@ -1,7 +1,6 @@
 import 'package:all_printer/models/InvoiceListModel.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-
 import 'package:all_printer/all_printer.dart';
 import 'package:dio/dio.dart';
 import 'package:permission_handler/permission_handler.dart';
