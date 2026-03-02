@@ -78,6 +78,15 @@ class AllPrinterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
             }
 
+            "printImageFinish" -> {
+                try {
+                    printerObject?.printImageFinish()
+                    result.success("success !")
+                } catch (e: Exception) {
+                    result.success("${e.message}");
+                }
+            }
+
             "printQrCode" -> {
                 try {
                     val arguments = call.arguments as? Map<String, Any>

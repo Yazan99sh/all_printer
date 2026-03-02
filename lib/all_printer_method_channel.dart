@@ -67,6 +67,14 @@ class MethodChannelAllPrinter extends AllPrinterPlatform {
   }
 
   @override
+  Future<String?> printImageFinish() async {
+    final printResult =
+        await methodChannel.invokeMethod<String>('printImageFinish');
+    AppLogger.logDebug("printImageFinish() : ${printResult.toString()}");
+    return printResult;
+  }
+
+  @override
   Future<String?> printImage(String imagePath) async {
     final printResult =
         await methodChannel.invokeMethod<String>('printImage', imagePath);

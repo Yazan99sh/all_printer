@@ -75,6 +75,10 @@ abstract class AllPrinterPlatform extends PlatformInterface {
     throw UnimplementedError('printFinish() has not been implemented.');
   }
 
+  Future printImageFinish() {
+    throw UnimplementedError('printImageFinish() has not been implemented.');
+  }
+
   Future<String?> printQrCode(String? qrData, {Map<String, String>? saudiQrData}) {
     throw UnimplementedError('printQrCode() has not been implemented.');
   }

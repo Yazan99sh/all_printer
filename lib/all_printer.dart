@@ -38,6 +38,10 @@ class AllPrinter {
     return AllPrinterPlatform.instance.printFinish();
   }
 
+  Future printImageFinish() {
+    return AllPrinterPlatform.instance.printImageFinish();
+  }
+
   Future getPermission() async {
     if (!(await Permission.storage.isGranted)) {
       await Permission.storage.request();

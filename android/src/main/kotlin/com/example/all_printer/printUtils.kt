@@ -722,6 +722,51 @@ class PrintingMethods {
     }
 
 
+    fun printImageFinish() {
+        Log.d("printImageFinish", "called")
+        checkIminPrinter()
+        when (Constant.posType) {
+            "MobiPrint" -> {
+                print!!.printText("\n")
+            }
+
+            "WISENET5" -> try {
+                mPrinter!!.printPaper(10)
+                mPrinter!!.printFinish()
+            } catch (ex: java.lang.Exception) {
+                Log.e("printImageFinish WISENET5", ex.toString() + "")
+            }
+
+            "MP3_Plus", "MobiPrint 4+", "MobiPrint4_Plus", "MP4", "Mobiwire MP4", "k80hd_bsp_fwv_512m" -> try {
+                CsPrinter.printText("\n")
+                CsPrinter.printEndLine()
+            } catch (ex: java.lang.Exception) {
+                Log.e("printImageFinish MP3_Plus", ex.toString() + "")
+            }
+
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO" -> try {
+                AidlUtil.getInstance().printText("\n", 24F, true, false, 0)
+                cutPaper()
+            } catch (ex: java.lang.Exception) {
+                Log.e("printImageFinish Sunmi", ex.toString() + "")
+            }
+
+            "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
+                selectPrinter?.lineApi()?.run {
+                    initLine(BaseStyle.getStyle())
+                    autoOut()
+                }
+            } catch (ex: java.lang.Exception) {
+                Log.e("printImageFinish V3_MIX", ex.toString() + "")
+            }
+
+            "D4-505", "D4", "D1", "M2-Max", "Swift 1", "S1", "M2-Pro", "D1-Pro" -> {
+                mIminPrintUtils!!.printAndFeedPaper(1)
+                mIminPrintUtils!!.partialCut()
+            }
+        }
+    }
+
     private fun cutPaper() {
         if (Constant.posType == "T2mini" || Constant.posType == "T1mini-G" || Constant.posType == "T2mini_s" || Constant.posType == "D2mini" || Constant.posType == "T2s" || Constant.posType == "K2_PRO" || Constant.posType == "K2_MINI" || Constant.posType == "V2_PRO"
         ) {
