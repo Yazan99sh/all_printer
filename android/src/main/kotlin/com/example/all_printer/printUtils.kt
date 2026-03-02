@@ -745,7 +745,6 @@ class PrintingMethods {
             }
 
             "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO" -> try {
-                AidlUtil.getInstance().printText("\n", 24F, true, false, 0)
                 cutPaper()
             } catch (ex: java.lang.Exception) {
                 Log.e("printImageFinish Sunmi", ex.toString() + "")

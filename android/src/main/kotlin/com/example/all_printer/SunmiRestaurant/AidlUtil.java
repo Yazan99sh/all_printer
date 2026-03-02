@@ -272,7 +272,6 @@ public class AidlUtil {
 //                woyouService.printBitmap(bitmap, null);
 //                woyouService.printText("\n纵向排列\n", null);
             }
-            woyouService.lineWrap(1, null);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
