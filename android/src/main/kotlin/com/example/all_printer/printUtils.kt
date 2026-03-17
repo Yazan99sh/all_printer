@@ -52,7 +52,7 @@ class PrintingMethods {
 
         var mIminPrintUtils: IminPrintUtils? = null
         private val printerX: PrinterViewModel? by lazy {
-            if (Build.MODEL == "V3_MIX_EDLA_GL" || Build.MODEL == "V3_MIX_STD") {
+            if (Build.MODEL == "V3" || Build.MODEL == "V3_MIX_EDLA_GL" || Build.MODEL == "V3_MIX_STD") {
                 PrinterViewModel()
             } else {
                 null
@@ -141,7 +141,7 @@ class PrintingMethods {
                 }
             }
 
-            "V3_MIX_EDLA_GL", "V3_MIX_STD" -> {
+            "V3", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> {
                 try {
                     LoginActivity?.let {
                         printerX?.initPrinter(it)
@@ -267,7 +267,7 @@ class PrintingMethods {
                     return pos.replace(Regex("[^0-9]"), "")
                 }
 
-                "V3_MIX_EDLA_GL", "V3_MIX_STD" -> {
+                "V3", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> {
                     try {
                         val pos = get("ro.sunmi.serial") as String
                         return pos.replace(Regex("[^0-9]"), "")
@@ -509,7 +509,7 @@ class PrintingMethods {
                     Log.e("Rey Exception Mobiwire", ex.toString() + "")
                 }
 
-                "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
+                "V3", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
                     val alignment = when (textAlign) {
                         0 -> {
                             Align.LEFT
@@ -642,7 +642,7 @@ class PrintingMethods {
                     Log.e("Rey Exception Sunmi", ex.toString() + "")
                 }
 
-                "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
+                "V3", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
                     selectPrinter?.lineApi()?.run {
                         printQrCode(
                             string!!, QrStyle.getStyle().setAlign(Align.CENTER)
@@ -697,7 +697,7 @@ class PrintingMethods {
                 Log.e("Rey Exception MP3_Plus", ex.toString() + "")
             }
 
-            "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
+            "V3", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
                 selectPrinter?.lineApi()?.run {
                     initLine(BaseStyle.getStyle())
                     printText(
@@ -750,7 +750,7 @@ class PrintingMethods {
                 Log.e("printImageFinish Sunmi", ex.toString() + "")
             }
 
-            "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
+            "V3", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
                 selectPrinter?.lineApi()?.run {
                     initLine(BaseStyle.getStyle())
                     autoOut()
@@ -787,7 +787,7 @@ class PrintingMethods {
                     Log.e("Sunmi Exception Drawer", ex.toString() + "")
                 }
 
-                "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
+                "V3", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
                     selectPrinter?.cashDrawerApi()?.open(null)
                 } catch (ex: java.lang.Exception) {
                     Log.e("Sunmi Exception Drawer", ex.toString() + "")
@@ -945,7 +945,7 @@ class PrintingMethods {
                     AidlUtil.getInstance().printBitmap(bitmap, 0)
                 }
 
-                "V3_MIX_EDLA_GL" , "V3_MIX_STD" -> {
+                "V3", "V3_MIX_EDLA_GL" , "V3_MIX_STD" -> {
                     val options = BitmapFactory.Options()
                     options.inPreferredConfig = Bitmap.Config.ARGB_8888
                     val bitmap = BitmapFactory.decodeStream(FileInputStream(string), null, options)
