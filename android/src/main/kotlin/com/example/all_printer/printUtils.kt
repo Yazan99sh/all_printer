@@ -131,7 +131,7 @@ class PrintingMethods {
             "T2mini",
             "T2mini_s",
             "T1mini-G",
-            "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO" -> {
+            "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s" -> {
                 try {
                     // should add context here
                     AidlUtil.getInstance().connectPrinterService(LoginActivity)
@@ -261,7 +261,7 @@ class PrintingMethods {
                 "T2mini",
                 "T2mini_s",
                 "T1mini-G",
-                "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO" -> {
+                "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s" -> {
                     val pos = AidlUtil.getInstance().sn
                     Log.e("POS", pos);
                     return pos.replace(Regex("[^0-9]"), "")
@@ -502,7 +502,7 @@ class PrintingMethods {
                     Log.e("Rey Exception MP3_Plus", ex.toString() + "")
                 }
 
-                "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO" -> try {
+                "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s" -> try {
                     AidlUtil.getInstance()
                         .printText(string, size, false, false, textAlign)
                 } catch (ex: java.lang.Exception) {
@@ -631,7 +631,7 @@ class PrintingMethods {
                     Log.e("Rey Exception MP3_Plus", ex.toString() + "")
                 }
 
-                "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO" -> try {
+                "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s" -> try {
                     if (bitmap != null) {
                         AidlUtil.getInstance().printBitmap(bitmap)
                         //                            AidlUtil.getInstance().printText("\n", 36, true, false, false);
@@ -690,7 +690,7 @@ class PrintingMethods {
                 Log.e("Rey Exception MP3_Plus", ex.toString() + "")
             }
 
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO" -> try {
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s" -> try {
                 AidlUtil.getInstance().printText("\n\n\n", 36F, true, false, 0)
                 cutPaper()
             } catch (ex: java.lang.Exception) {
@@ -744,7 +744,7 @@ class PrintingMethods {
                 Log.e("printImageFinish MP3_Plus", ex.toString() + "")
             }
 
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO" -> try {
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s" -> try {
                 cutPaper()
             } catch (ex: java.lang.Exception) {
                 Log.e("printImageFinish Sunmi", ex.toString() + "")
@@ -767,7 +767,7 @@ class PrintingMethods {
     }
 
     private fun cutPaper() {
-        if (Constant.posType == "T2mini" || Constant.posType == "T1mini-G" || Constant.posType == "T2mini_s" || Constant.posType == "D2mini" || Constant.posType == "T2s" || Constant.posType == "K2_PRO" || Constant.posType == "K2_MINI" || Constant.posType == "V2_PRO"
+        if (Constant.posType == "T2mini" || Constant.posType == "T1mini-G" || Constant.posType == "T2mini_s" || Constant.posType == "D2mini" || Constant.posType == "T2s" || Constant.posType == "K2_PRO" || Constant.posType == "K2_MINI" || Constant.posType == "V2_PRO" || Constant.posType == "V2s"
         ) {
             try {
                 AidlUtil.woyouService.cutPaper(null)
@@ -938,7 +938,7 @@ class PrintingMethods {
                     printRey("\n", 24F, 0, 1)
                 }
 
-                "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO" -> {
+                "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s" -> {
                     val options = BitmapFactory.Options()
                     options.inPreferredConfig = Bitmap.Config.ARGB_8888
                     val bitmap = BitmapFactory.decodeStream(FileInputStream(string), null, options)
@@ -1194,7 +1194,7 @@ class PrintingMethods {
 
     fun returnStars(): String {
         return when (Constant.posType) {
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "V2_PRO", "K2_MINI", "D4-505", "D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "************************************************"
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "V2_PRO", "V2s", "K2_MINI", "D4-505", "D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "************************************************"
             "MP3_Plus", "MP4", "Mobiwire MP4", "MobiPrint4_Plus", "k80hd_bsp_fwv_512m" -> "******************************"
             else -> "******************************"
         }
@@ -1202,7 +1202,7 @@ class PrintingMethods {
 
     fun returnLines(): String {
         return when (Constant.posType) {
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "D4-505", "D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "------------------------------------------------"
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s", "D4-505", "D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "------------------------------------------------"
             "MP3_Plus", "MP4", "Mobiwire MP4", "MobiPrint4_Plus", "k80hd_bsp_fwv_512m" -> "--------------------------------"
             else -> "--------------------------------"
         }
