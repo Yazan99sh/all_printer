@@ -781,7 +781,7 @@ class PrintingMethods {
         try {
             Log.e("Constant.posType", Constant.posType.toString() + " ")
             when (Constant.posType) {
-                "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI" -> try {
+                "T2mini", "T1mini-G", "T2mini_s", "D2mini", "V2s", "T2s", "K2_PRO", "K2_MINI" -> try {
                     AidlUtil.woyouService.openDrawer(null)
                 } catch (ex: java.lang.Exception) {
                     Log.e("Sunmi Exception Drawer", ex.toString() + "")
