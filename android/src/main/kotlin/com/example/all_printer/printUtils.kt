@@ -52,7 +52,7 @@ class PrintingMethods {
 
         var mIminPrintUtils: IminPrintUtils? = null
         private val printerX: PrinterViewModel? by lazy {
-            if (Build.MODEL == "V3" || Build.MODEL == "V3_MIX_EDLA_GL" || Build.MODEL == "V3_MIX_STD") {
+            if (Build.MODEL == "V3" || Build.MODEL == "V3e" || Build.MODEL == "V3_MIX_EDLA_GL" || Build.MODEL == "V3_MIX_STD") {
                 PrinterViewModel()
             } else {
                 null
@@ -131,7 +131,7 @@ class PrintingMethods {
             "T2mini",
             "T2mini_s",
             "T1mini-G",
-            "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s", "V2s+Gl", "V2" -> {
+            "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s", "V2s+Gl", "V2", "V2025" -> {
                 try {
                     // should add context here
                     AidlUtil.getInstance().connectPrinterService(LoginActivity)
@@ -141,7 +141,7 @@ class PrintingMethods {
                 }
             }
 
-            "V3", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> {
+            "V3", "V3e", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> {
                 try {
                     LoginActivity?.let {
                         printerX?.initPrinter(it)
@@ -261,13 +261,13 @@ class PrintingMethods {
                 "T2mini",
                 "T2mini_s",
                 "T1mini-G",
-                "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s", "V2s+Gl", "V2" -> {
+                "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s", "V2s+Gl", "V2", "V2025" -> {
                     val pos = AidlUtil.getInstance().sn
                     Log.e("POS", pos);
                     return pos.replace(Regex("[^0-9]"), "")
                 }
 
-                "V3", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> {
+                "V3", "V3e", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> {
                     try {
                         val pos = get("ro.sunmi.serial") as String
                         return pos.replace(Regex("[^0-9]"), "")
@@ -502,14 +502,14 @@ class PrintingMethods {
                     Log.e("Rey Exception MP3_Plus", ex.toString() + "")
                 }
 
-                "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s", "V2s+Gl", "V2" -> try {
+                "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s", "V2s+Gl", "V2", "V2025" -> try {
                     AidlUtil.getInstance()
                         .printText(string, size, false, false, textAlign)
                 } catch (ex: java.lang.Exception) {
                     Log.e("Rey Exception Mobiwire", ex.toString() + "")
                 }
 
-                "V3", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
+                "V3", "V3e", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
                     val alignment = when (textAlign) {
                         0 -> {
                             Align.LEFT
@@ -631,7 +631,7 @@ class PrintingMethods {
                     Log.e("Rey Exception MP3_Plus", ex.toString() + "")
                 }
 
-                "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s", "V2s+Gl", "V2" -> try {
+                "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s", "V2s+Gl", "V2", "V2025" -> try {
                     if (bitmap != null) {
                         AidlUtil.getInstance().printBitmap(bitmap)
                         //                            AidlUtil.getInstance().printText("\n", 36, true, false, false);
@@ -642,7 +642,7 @@ class PrintingMethods {
                     Log.e("Rey Exception Sunmi", ex.toString() + "")
                 }
 
-                "V3", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
+                "V3", "V3e", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
                     selectPrinter?.lineApi()?.run {
                         printQrCode(
                             string!!, QrStyle.getStyle().setAlign(Align.CENTER)
@@ -690,14 +690,14 @@ class PrintingMethods {
                 Log.e("Rey Exception MP3_Plus", ex.toString() + "")
             }
 
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s", "V2s+Gl", "V2" -> try {
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s", "V2s+Gl", "V2", "V2025" -> try {
                 AidlUtil.getInstance().printText("\n\n\n", 36F, true, false, 0)
                 cutPaper()
             } catch (ex: java.lang.Exception) {
                 Log.e("Rey Exception MP3_Plus", ex.toString() + "")
             }
 
-            "V3", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
+            "V3", "V3e", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
                 selectPrinter?.lineApi()?.run {
                     initLine(BaseStyle.getStyle())
                     printText(
@@ -744,13 +744,13 @@ class PrintingMethods {
                 Log.e("printImageFinish MP3_Plus", ex.toString() + "")
             }
 
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s", "V2s+Gl", "V2" -> try {
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s", "V2s+Gl", "V2", "V2025" -> try {
                 cutPaper()
             } catch (ex: java.lang.Exception) {
                 Log.e("printImageFinish Sunmi", ex.toString() + "")
             }
 
-            "V3", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
+            "V3", "V3e", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
                 selectPrinter?.lineApi()?.run {
                     initLine(BaseStyle.getStyle())
                     autoOut()
@@ -767,7 +767,7 @@ class PrintingMethods {
     }
 
     private fun cutPaper() {
-        if (Constant.posType == "T2mini" || Constant.posType == "T1mini-G" || Constant.posType == "T2mini_s" || Constant.posType == "D2mini" || Constant.posType == "T2s" || Constant.posType == "K2_PRO" || Constant.posType == "K2_MINI" || Constant.posType == "V2_PRO" || Constant.posType == "V2s" || Constant.posType == "V2s+Gl" || Constant.posType == "V2"
+        if (Constant.posType == "T2mini" || Constant.posType == "T1mini-G" || Constant.posType == "T2mini_s" || Constant.posType == "D2mini" || Constant.posType == "T2s" || Constant.posType == "K2_PRO" || Constant.posType == "K2_MINI" || Constant.posType == "V2_PRO" || Constant.posType == "V2s" || Constant.posType == "V2s+Gl" || Constant.posType == "V2" || Constant.posType == "V2025"
         ) {
             try {
                 AidlUtil.woyouService.cutPaper(null)
@@ -781,13 +781,13 @@ class PrintingMethods {
         try {
             Log.e("Constant.posType", Constant.posType.toString() + " ")
             when (Constant.posType) {
-                "T2mini", "T1mini-G", "T2mini_s", "D2mini", "V2s", "V2s+Gl", "V2", "T2s", "K2_PRO", "K2_MINI" -> try {
+                "T2mini", "T1mini-G", "T2mini_s", "D2mini", "V2s", "V2s+Gl", "V2", "V2025", "T2s", "K2_PRO", "K2_MINI" -> try {
                     AidlUtil.woyouService.openDrawer(null)
                 } catch (ex: java.lang.Exception) {
                     Log.e("Sunmi Exception Drawer", ex.toString() + "")
                 }
 
-                "V3", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
+                "V3", "V3e", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
                     selectPrinter?.cashDrawerApi()?.open(null)
                 } catch (ex: java.lang.Exception) {
                     Log.e("Sunmi Exception Drawer", ex.toString() + "")
@@ -938,14 +938,14 @@ class PrintingMethods {
                     printRey("\n", 24F, 0, 1)
                 }
 
-                "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s", "V2s+Gl", "V2" -> {
+                "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s", "V2s+Gl", "V2", "V2025" -> {
                     val options = BitmapFactory.Options()
                     options.inPreferredConfig = Bitmap.Config.ARGB_8888
                     val bitmap = BitmapFactory.decodeStream(FileInputStream(string), null, options)
                     AidlUtil.getInstance().printBitmap(bitmap, 0)
                 }
 
-                "V3", "V3_MIX_EDLA_GL" , "V3_MIX_STD" -> {
+                "V3", "V3e", "V3_MIX_EDLA_GL" , "V3_MIX_STD" -> {
                     val options = BitmapFactory.Options()
                     options.inPreferredConfig = Bitmap.Config.ARGB_8888
                     val bitmap = BitmapFactory.decodeStream(FileInputStream(string), null, options)
@@ -1194,7 +1194,7 @@ class PrintingMethods {
 
     fun returnStars(): String {
         return when (Constant.posType) {
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "V2_PRO", "V2s", "V2s+Gl", "V2", "K2_MINI", "D4-505", "D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "************************************************"
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "V2_PRO", "V2s", "V2s+Gl", "V2", "V2025", "K2_MINI", "D4-505", "D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "************************************************"
             "MP3_Plus", "MP4", "Mobiwire MP4", "MobiPrint4_Plus", "k80hd_bsp_fwv_512m" -> "******************************"
             else -> "******************************"
         }
@@ -1202,7 +1202,7 @@ class PrintingMethods {
 
     fun returnLines(): String {
         return when (Constant.posType) {
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s", "V2s+Gl", "V2", "D4-505", "D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "------------------------------------------------"
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s", "V2s+Gl", "V2", "V2025", "D4-505", "D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "------------------------------------------------"
             "MP3_Plus", "MP4", "Mobiwire MP4", "MobiPrint4_Plus", "k80hd_bsp_fwv_512m" -> "--------------------------------"
             else -> "--------------------------------"
         }
