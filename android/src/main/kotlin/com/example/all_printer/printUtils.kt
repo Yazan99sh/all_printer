@@ -52,7 +52,7 @@ class PrintingMethods {
 
         var mIminPrintUtils: IminPrintUtils? = null
         private val printerX: PrinterViewModel? by lazy {
-            if (Build.MODEL == "V3" || Build.MODEL == "V3e" || Build.MODEL == "V3e-4G" || Build.MODEL == "SUB_V3e-4G" || Build.MODEL == "V3_MIX_EDLA_GL" || Build.MODEL == "V3_MIX_STD") {
+            if (Build.MODEL == "V3" || Build.MODEL == "V3e" || Build.MODEL == "V3e-4G" || Build.MODEL == "SUB_V3e-4G" || Build.MODEL == "V3_MIX_EDLA_GL" || Build.MODEL == "V3_MIX_STD" || Build.MODEL == "T3" || Build.MODEL == "K2_A13") {
                 PrinterViewModel()
             } else {
                 null
@@ -141,7 +141,7 @@ class PrintingMethods {
                 }
             }
 
-            "V3", "V3e", "V3e-4G", "SUB_V3e-4G", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> {
+            "V3", "V3e", "V3e-4G", "SUB_V3e-4G", "V3_MIX_EDLA_GL", "V3_MIX_STD", "T3", "K2_A13" -> {
                 try {
                     LoginActivity?.let {
                         printerX?.initPrinter(it)
@@ -267,7 +267,7 @@ class PrintingMethods {
                     return pos.replace(Regex("[^0-9]"), "")
                 }
 
-                "V3", "V3e", "V3e-4G", "SUB_V3e-4G", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> {
+                "V3", "V3e", "V3e-4G", "SUB_V3e-4G", "V3_MIX_EDLA_GL", "V3_MIX_STD", "T3", "K2_A13" -> {
                     try {
                         val pos = get("ro.sunmi.serial") as String
                         return pos.replace(Regex("[^0-9]"), "")
@@ -509,7 +509,7 @@ class PrintingMethods {
                     Log.e("Rey Exception Mobiwire", ex.toString() + "")
                 }
 
-                "V3", "V3e", "V3e-4G", "SUB_V3e-4G", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
+                "V3", "V3e", "V3e-4G", "SUB_V3e-4G", "V3_MIX_EDLA_GL", "V3_MIX_STD", "T3", "K2_A13" -> try {
                     val alignment = when (textAlign) {
                         0 -> {
                             Align.LEFT
@@ -642,7 +642,7 @@ class PrintingMethods {
                     Log.e("Rey Exception Sunmi", ex.toString() + "")
                 }
 
-                "V3", "V3e", "V3e-4G", "SUB_V3e-4G", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
+                "V3", "V3e", "V3e-4G", "SUB_V3e-4G", "V3_MIX_EDLA_GL", "V3_MIX_STD", "T3", "K2_A13" -> try {
                     selectPrinter?.lineApi()?.run {
                         printQrCode(
                             string!!, QrStyle.getStyle().setAlign(Align.CENTER)
@@ -697,7 +697,7 @@ class PrintingMethods {
                 Log.e("Rey Exception MP3_Plus", ex.toString() + "")
             }
 
-            "V3", "V3e", "V3e-4G", "SUB_V3e-4G", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
+            "V3", "V3e", "V3e-4G", "SUB_V3e-4G", "V3_MIX_EDLA_GL", "V3_MIX_STD", "T3", "K2_A13" -> try {
                 selectPrinter?.lineApi()?.run {
                     initLine(BaseStyle.getStyle())
                     printText(
@@ -750,7 +750,7 @@ class PrintingMethods {
                 Log.e("printImageFinish Sunmi", ex.toString() + "")
             }
 
-            "V3", "V3e", "V3e-4G", "SUB_V3e-4G", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
+            "V3", "V3e", "V3e-4G", "SUB_V3e-4G", "V3_MIX_EDLA_GL", "V3_MIX_STD", "T3", "K2_A13" -> try {
                 selectPrinter?.lineApi()?.run {
                     initLine(BaseStyle.getStyle())
                     autoOut()
@@ -787,7 +787,7 @@ class PrintingMethods {
                     Log.e("Sunmi Exception Drawer", ex.toString() + "")
                 }
 
-                "V3", "V3e", "V3e-4G", "SUB_V3e-4G", "V3_MIX_EDLA_GL", "V3_MIX_STD" -> try {
+                "V3", "V3e", "V3e-4G", "SUB_V3e-4G", "V3_MIX_EDLA_GL", "V3_MIX_STD", "T3", "K2_A13" -> try {
                     selectPrinter?.cashDrawerApi()?.open(null)
                 } catch (ex: java.lang.Exception) {
                     Log.e("Sunmi Exception Drawer", ex.toString() + "")
@@ -945,7 +945,7 @@ class PrintingMethods {
                     AidlUtil.getInstance().printBitmap(bitmap, 0)
                 }
 
-                "V3", "V3e", "V3e-4G", "SUB_V3e-4G", "V3_MIX_EDLA_GL" , "V3_MIX_STD" -> {
+                "V3", "V3e", "V3e-4G", "SUB_V3e-4G", "V3_MIX_EDLA_GL" , "V3_MIX_STD", "T3", "K2_A13" -> {
                     val options = BitmapFactory.Options()
                     options.inPreferredConfig = Bitmap.Config.ARGB_8888
                     val bitmap = BitmapFactory.decodeStream(FileInputStream(string), null, options)
@@ -1194,7 +1194,7 @@ class PrintingMethods {
 
     fun returnStars(): String {
         return when (Constant.posType) {
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "V2_PRO", "V2s", "V2s_STGL", "V2s+Gl", "V2", "V2025", "K2_MINI", "D4-505", "D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "************************************************"
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "V2_PRO", "V2s", "V2s_STGL", "V2s+Gl", "V2", "V2025", "K2_MINI", "D4-505", "D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro", "T3", "K2_A13" -> "************************************************"
             "MP3_Plus", "MP4", "Mobiwire MP4", "MobiPrint4_Plus", "k80hd_bsp_fwv_512m" -> "******************************"
             else -> "******************************"
         }
@@ -1202,7 +1202,7 @@ class PrintingMethods {
 
     fun returnLines(): String {
         return when (Constant.posType) {
-            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s", "V2s_STGL", "V2s+Gl", "V2", "V2025", "D4-505", "D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro" -> "------------------------------------------------"
+            "T2mini", "T1mini-G", "T2mini_s", "D2mini", "T2s", "K2_PRO", "K2_MINI", "V2_PRO", "V2s", "V2s_STGL", "V2s+Gl", "V2", "V2025", "D4-505", "D4", "D1", "D1-Pro", "M2-Max", "Swift 1", "S1", "M2-Pro", "T3", "K2_A13" -> "------------------------------------------------"
             "MP3_Plus", "MP4", "Mobiwire MP4", "MobiPrint4_Plus", "k80hd_bsp_fwv_512m" -> "--------------------------------"
             else -> "--------------------------------"
         }
